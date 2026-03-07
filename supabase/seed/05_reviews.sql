@@ -5,7 +5,7 @@
 -- Founder:  小林由起子 (harmony-mc.com)
 --
 -- Fixed UUIDs:
---   Reviews: r0000000-0000-0000-0000-000000000001 ~ r0000000-0000-0000-0000-000000000006
+--   Reviews: f0000000-0000-0000-0000-000000000001 ~ f0000000-0000-0000-0000-000000000006
 --
 -- Only completed bookings can have reviews (UNIQUE constraint on booking_id).
 --
@@ -26,7 +26,7 @@
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000001',
+  'f0000000-0000-0000-0000-000000000001',
   'b0000000-0000-0000-0000-000000000001',
   'd0000000-0000-0000-0000-000000000001',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -41,7 +41,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000002',
+  'f0000000-0000-0000-0000-000000000002',
   'b0000000-0000-0000-0000-000000000002',
   'd0000000-0000-0000-0000-000000000003',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000003'),
@@ -56,7 +56,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000003',
+  'f0000000-0000-0000-0000-000000000003',
   'b0000000-0000-0000-0000-000000000003',
   'd0000000-0000-0000-0000-000000000005',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -71,7 +71,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000004',
+  'f0000000-0000-0000-0000-000000000004',
   'b0000000-0000-0000-0000-000000000004',
   'd0000000-0000-0000-0000-000000000002',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -86,7 +86,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000005',
+  'f0000000-0000-0000-0000-000000000005',
   'b0000000-0000-0000-0000-000000000014',
   'd0000000-0000-0000-0000-000000000006',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000004'),
@@ -101,7 +101,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000006',
+  'f0000000-0000-0000-0000-000000000006',
   'b0000000-0000-0000-0000-000000000015',
   'd0000000-0000-0000-0000-000000000007',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),

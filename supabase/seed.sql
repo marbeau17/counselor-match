@@ -320,10 +320,6 @@ INSERT INTO counselors (
   0.25
 );
 
--- ============================================================
--- クライアントユーザー
--- ============================================================
-
 -- =============================================================================
 -- 02_clients.sql - Seed client users (people who book counseling sessions)
 -- Platform: カウンセラーマッチ (Counselor Match)
@@ -505,10 +501,6 @@ UPDATE profiles
 SET display_name = '小川蓮',
     phone        = '090-2222-0008'
 WHERE id = 'd0000000-0000-0000-0000-000000000008';
-
--- ============================================================
--- 予約データ
--- ============================================================
 
 -- =============================================================================
 -- 03_bookings.sql - Seed booking records
@@ -863,10 +855,6 @@ VALUES (
   '2026-03-07 08:00:00+09'
 );
 
--- ============================================================
--- 支払いデータ
--- ============================================================
-
 -- =============================================================================
 -- 04_payments.sql - Seed payment records
 -- Platform: カウンセラーマッチ (Counselor Match)
@@ -874,7 +862,7 @@ VALUES (
 -- Founder:  小林由起子 (harmony-mc.com)
 --
 -- Fixed UUIDs:
---   Payments: p0000000-0000-0000-0000-000000000001 ~ p0000000-0000-0000-0000-000000000018
+--   Payments: e0000000-0000-0000-0000-000000000001 ~ e0000000-0000-0000-0000-000000000018
 --
 -- One payment per booking, mirroring booking status:
 --   completed / confirmed booking  -> payment status = 'paid'
@@ -903,7 +891,7 @@ VALUES (
 -- Payment 1: Booking 1 — 高橋優花 × 鈴木健太 (¥9,000, 22% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000001',
+  'e0000000-0000-0000-0000-000000000001',
   'b0000000-0000-0000-0000-000000000001',
   'd0000000-0000-0000-0000-000000000001',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -919,7 +907,7 @@ VALUES (
 -- Payment 2: Booking 2 — 木村さくら × 山本あかり (¥7,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000002',
+  'e0000000-0000-0000-0000-000000000002',
   'b0000000-0000-0000-0000-000000000002',
   'd0000000-0000-0000-0000-000000000003',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000003'),
@@ -935,7 +923,7 @@ VALUES (
 -- Payment 3: Booking 3 — 吉田美月 × 田中美咲 (¥12,000, 20% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000003',
+  'e0000000-0000-0000-0000-000000000003',
   'b0000000-0000-0000-0000-000000000003',
   'd0000000-0000-0000-0000-000000000005',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -951,7 +939,7 @@ VALUES (
 -- Payment 4: Booking 4 — 渡辺翔太 × 鈴木健太 (¥9,000, 22% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000004',
+  'e0000000-0000-0000-0000-000000000004',
   'b0000000-0000-0000-0000-000000000004',
   'd0000000-0000-0000-0000-000000000002',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -967,7 +955,7 @@ VALUES (
 -- Payment 14: Booking 14 — 松本悠人 × 佐藤龍一 (¥7,500, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000014',
+  'e0000000-0000-0000-0000-000000000014',
   'b0000000-0000-0000-0000-000000000014',
   'd0000000-0000-0000-0000-000000000006',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000004'),
@@ -983,7 +971,7 @@ VALUES (
 -- Payment 15: Booking 15 — 井上花音 × 田中美咲 (¥12,000, 20% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000015',
+  'e0000000-0000-0000-0000-000000000015',
   'b0000000-0000-0000-0000-000000000015',
   'd0000000-0000-0000-0000-000000000007',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -1003,7 +991,7 @@ VALUES (
 -- Payment 5: Booking 5 — 加藤大輝 × 佐藤龍一 (¥7,500, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000005',
+  'e0000000-0000-0000-0000-000000000005',
   'b0000000-0000-0000-0000-000000000005',
   'd0000000-0000-0000-0000-000000000004',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000004'),
@@ -1019,7 +1007,7 @@ VALUES (
 -- Payment 6: Booking 6 — 吉田美月 × 田中美咲 (¥12,000, 20% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000006',
+  'e0000000-0000-0000-0000-000000000006',
   'b0000000-0000-0000-0000-000000000006',
   'd0000000-0000-0000-0000-000000000005',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -1035,7 +1023,7 @@ VALUES (
 -- Payment 7: Booking 7 — 松本悠人 × 中村彩花 (¥5,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000007',
+  'e0000000-0000-0000-0000-000000000007',
   'b0000000-0000-0000-0000-000000000007',
   'd0000000-0000-0000-0000-000000000006',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000005'),
@@ -1051,7 +1039,7 @@ VALUES (
 -- Payment 8: Booking 8 — 小川蓮 × 伊藤大和 (¥5,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000008',
+  'e0000000-0000-0000-0000-000000000008',
   'b0000000-0000-0000-0000-000000000008',
   'd0000000-0000-0000-0000-000000000008',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000006'),
@@ -1067,7 +1055,7 @@ VALUES (
 -- Payment 16: Booking 16 — 小川蓮 × 山本あかり (¥7,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000016',
+  'e0000000-0000-0000-0000-000000000016',
   'b0000000-0000-0000-0000-000000000016',
   'd0000000-0000-0000-0000-000000000008',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000003'),
@@ -1083,7 +1071,7 @@ VALUES (
 -- Payment 18: Booking 18 — 渡辺翔太 × 伊藤大和 (¥5,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000018',
+  'e0000000-0000-0000-0000-000000000018',
   'b0000000-0000-0000-0000-000000000018',
   'd0000000-0000-0000-0000-000000000002',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000006'),
@@ -1103,7 +1091,7 @@ VALUES (
 -- Payment 9: Booking 9 — 高橋優花 × 田中美咲 (¥12,000, 20% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000009',
+  'e0000000-0000-0000-0000-000000000009',
   'b0000000-0000-0000-0000-000000000009',
   'd0000000-0000-0000-0000-000000000001',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -1118,7 +1106,7 @@ VALUES (
 -- Payment 10: Booking 10 — 井上花音 × 佐藤龍一 (¥7,500, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000010',
+  'e0000000-0000-0000-0000-000000000010',
   'b0000000-0000-0000-0000-000000000010',
   'd0000000-0000-0000-0000-000000000007',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000004'),
@@ -1133,7 +1121,7 @@ VALUES (
 -- Payment 11: Booking 11 — 木村さくら × 山本あかり (¥7,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000011',
+  'e0000000-0000-0000-0000-000000000011',
   'b0000000-0000-0000-0000-000000000011',
   'd0000000-0000-0000-0000-000000000003',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000003'),
@@ -1148,7 +1136,7 @@ VALUES (
 -- Payment 17: Booking 17 — 高橋優花 × 中村彩花 (¥5,000, 25% fee)
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000017',
+  'e0000000-0000-0000-0000-000000000017',
   'b0000000-0000-0000-0000-000000000017',
   'd0000000-0000-0000-0000-000000000001',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000005'),
@@ -1167,7 +1155,7 @@ VALUES (
 -- Payment 12: Booking 12 — 渡辺翔太 × 中村彩花 (¥5,000, 25% fee) — 体調不良のためキャンセル
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000012',
+  'e0000000-0000-0000-0000-000000000012',
   'b0000000-0000-0000-0000-000000000012',
   'd0000000-0000-0000-0000-000000000002',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000005'),
@@ -1183,7 +1171,7 @@ VALUES (
 -- Payment 13: Booking 13 — 加藤大輝 × 伊藤大和 (¥5,000, 25% fee) — 日程変更のためキャンセル
 INSERT INTO payments (id, booking_id, client_id, counselor_id, amount, platform_fee, counselor_payout, currency, status, stripe_payment_intent_id, created_at)
 VALUES (
-  'p0000000-0000-0000-0000-000000000013',
+  'e0000000-0000-0000-0000-000000000013',
   'b0000000-0000-0000-0000-000000000013',
   'd0000000-0000-0000-0000-000000000004',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000006'),
@@ -1196,10 +1184,6 @@ VALUES (
   '2026-02-20 10:00:00+09'
 );
 
--- ============================================================
--- レビューデータ
--- ============================================================
-
 -- =============================================================================
 -- 05_reviews.sql - Seed review records for completed bookings
 -- Platform: カウンセラーマッチ (Counselor Match)
@@ -1207,7 +1191,7 @@ VALUES (
 -- Founder:  小林由起子 (harmony-mc.com)
 --
 -- Fixed UUIDs:
---   Reviews: r0000000-0000-0000-0000-000000000001 ~ r0000000-0000-0000-0000-000000000006
+--   Reviews: f0000000-0000-0000-0000-000000000001 ~ f0000000-0000-0000-0000-000000000006
 --
 -- Only completed bookings can have reviews (UNIQUE constraint on booking_id).
 --
@@ -1228,7 +1212,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000001',
+  'f0000000-0000-0000-0000-000000000001',
   'b0000000-0000-0000-0000-000000000001',
   'd0000000-0000-0000-0000-000000000001',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -1243,7 +1227,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000002',
+  'f0000000-0000-0000-0000-000000000002',
   'b0000000-0000-0000-0000-000000000002',
   'd0000000-0000-0000-0000-000000000003',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000003'),
@@ -1258,7 +1242,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000003',
+  'f0000000-0000-0000-0000-000000000003',
   'b0000000-0000-0000-0000-000000000003',
   'd0000000-0000-0000-0000-000000000005',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
@@ -1273,7 +1257,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000004',
+  'f0000000-0000-0000-0000-000000000004',
   'b0000000-0000-0000-0000-000000000004',
   'd0000000-0000-0000-0000-000000000002',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000002'),
@@ -1288,7 +1272,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000005',
+  'f0000000-0000-0000-0000-000000000005',
   'b0000000-0000-0000-0000-000000000014',
   'd0000000-0000-0000-0000-000000000006',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000004'),
@@ -1303,7 +1287,7 @@ VALUES (
 -- ---------------------------------------------------------------------------
 INSERT INTO reviews (id, booking_id, client_id, counselor_id, rating, comment, is_anonymous, created_at)
 VALUES (
-  'r0000000-0000-0000-0000-000000000006',
+  'f0000000-0000-0000-0000-000000000006',
   'b0000000-0000-0000-0000-000000000015',
   'd0000000-0000-0000-0000-000000000007',
   (SELECT id FROM counselors WHERE user_id = 'c0000000-0000-0000-0000-000000000001'),
