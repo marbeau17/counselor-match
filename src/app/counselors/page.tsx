@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { CounselorCard } from "@/components/counselor/counselor-card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
+import { mockCounselors } from "@/lib/mock-data"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -10,13 +11,21 @@ export const metadata: Metadata = {
 }
 
 export default async function CounselorsPage() {
-  const supabase = await createClient()
+  let counselors: any[] | null = null
 
-  const { data: counselors } = await supabase
-    .from("counselors")
-    .select("*, profiles(*)")
-    .eq("is_active", true)
-    .order("rating_average", { ascending: false })
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase
+        .from("counselors")
+        .select("*, profiles(*)")
+        .eq("is_active", true)
+        .order("rating_average", { ascending: false })
+      counselors = data
+    } catch {}
+  }
+
+  const displayCounselors = counselors && counselors.length > 0 ? counselors : mockCounselors
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -63,16 +72,9 @@ export default async function CounselorsPage() {
 
         {/* Counselor list */}
         <div className="lg:col-span-3 space-y-4">
-          {counselors && counselors.length > 0 ? (
-            counselors.map((counselor) => (
-              <CounselorCard key={counselor.id} counselor={counselor} />
-            ))
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">カウンセラーはまだ登録されていません</p>
-              <p className="text-gray-400 text-sm mt-2">準備中です。もうしばらくお待ちください。</p>
-            </div>
-          )}
+          {displayCounselors.map((counselor) => (
+            <CounselorCard key={counselor.id} counselor={counselor} />
+          ))}
         </div>
       </div>
     </div>

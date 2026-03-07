@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Star, MessageCircle, Video, Phone, CheckCircle } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
+import { mockCounselors, mockReviews } from "@/lib/mock-data"
 import type { Metadata } from "next"
 
 const levelLabels: Record<string, string> = {
@@ -29,14 +30,31 @@ const sessionTypeLabels: Record<string, string> = {
   phone: "電話",
 }
 
+function findMockCounselor(id: string) {
+  return mockCounselors.find((c) => c.id === id) || null
+}
+
+function findMockReviews(counselorId: string) {
+  return mockReviews.filter((r) => r.counselor_id === counselorId)
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("counselors")
-    .select("*, profiles(*)")
-    .eq("id", id)
-    .single()
+  let data: any = null
+
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createClient()
+      const { data: d } = await supabase
+        .from("counselors")
+        .select("*, profiles(*)")
+        .eq("id", id)
+        .single()
+      data = d
+    } catch {}
+  }
+
+  if (!data) data = findMockCounselor(id)
 
   const name = data?.profiles?.display_name || data?.profiles?.full_name || "カウンセラー"
   return {
@@ -47,25 +65,40 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function CounselorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const supabase = await createClient()
+  let counselor: any = null
+  let reviews: any[] | null = null
 
-  const { data: counselor } = await supabase
-    .from("counselors")
-    .select("*, profiles(*)")
-    .eq("id", id)
-    .eq("is_active", true)
-    .single()
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase
+        .from("counselors")
+        .select("*, profiles(*)")
+        .eq("id", id)
+        .eq("is_active", true)
+        .single()
+      counselor = data
+
+      if (counselor) {
+        const { data: revData } = await supabase
+          .from("reviews")
+          .select("*, client:profiles!reviews_client_id_fkey(display_name, full_name)")
+          .eq("counselor_id", id)
+          .order("created_at", { ascending: false })
+          .limit(10)
+        reviews = revData
+      }
+    } catch {}
+  }
+
+  if (!counselor) {
+    counselor = findMockCounselor(id)
+    if (counselor) reviews = findMockReviews(id)
+  }
 
   if (!counselor) notFound()
 
   const name = counselor.profiles?.display_name || counselor.profiles?.full_name || "カウンセラー"
-
-  const { data: reviews } = await supabase
-    .from("reviews")
-    .select("*, client:profiles!reviews_client_id_fkey(display_name, full_name)")
-    .eq("counselor_id", id)
-    .order("created_at", { ascending: false })
-    .limit(10)
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
