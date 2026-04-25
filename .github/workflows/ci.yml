@@ -142,7 +142,9 @@ jobs:
           esac
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps ${{ steps.browser.outputs.name }}
+        # global-setup.ts が常に chromium で先にログインして storage state を保存するため、
+        # 対象 project が webkit/firefox の場合も chromium を必ず追加で install する
+        run: pnpm exec playwright install --with-deps ${{ steps.browser.outputs.name }} chromium
 
       - name: Run Playwright tests (${{ matrix.shard_label }})
         env:
@@ -188,9 +190,14 @@ jobs:
           version: latest
 
       - name: Start Supabase + apply seed
+        # db reset の 502 (container restart) は無視 (DB は正常)
         run: |
           supabase start
-          supabase db reset
+          supabase db reset || echo "db reset exit non-zero (likely 502, continuing)"
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:54321/rest/v1/ -o /dev/null && break
+            sleep 2
+          done
 
       - name: Configure .env.local
         run: |
