@@ -23,6 +23,7 @@ export const SECTION_LABELS: Record<string, string> = {
   marquee: "流れる帯",
   video_embed: "動画埋込",
   certifications: "認定 / 資格",
+  gallery: "ギャラリー (画像群)",
 }
 
 export const SECTION_TYPES = Object.keys(SECTION_LABELS)

@@ -5,7 +5,7 @@ import {
   ToolsPromoSection, ColumnPromoSection, ComparisonTableSection,
   StatsCounterSection, BeforeAfterSection, StorySection,
   LeadCaptureSection, RichTextSection, MarqueeSection,
-  VideoEmbedSection, CertificationsSection,
+  VideoEmbedSection, CertificationsSection, GallerySection,
 } from "./sections"
 
 export { SECTION_LABELS, SECTION_TYPES } from "./section-types"
@@ -36,6 +36,7 @@ export const SECTION_REGISTRY: Record<string, SectionComp> = {
   marquee: MarqueeSection,
   video_embed: VideoEmbedSection,
   certifications: CertificationsSection,
+  gallery: GallerySection,
 }
 
 export async function SectionRenderer({

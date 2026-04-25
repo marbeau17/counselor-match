@@ -110,18 +110,30 @@ export function TrustBarSection({ props }: { props: AnyProps }) {
 // FEATURES
 // =============================================================================
 export function FeaturesSection({ props }: { props: AnyProps }) {
-  const items = (props.items as { icon?: string; title?: string; body?: string }[] | undefined) ?? []
+  const items = (props.items as { icon?: string; title?: string; body?: string; image_url?: string }[] | undefined) ?? []
   const cols = (props.columns as number | undefined) ?? 3
   const gridCls = cols === 4 ? "md:grid-cols-4" : cols === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
+  const heading = String(props.heading ?? "")
   return (
     <section className="py-20 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        {heading && (
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
+            {heading}
+          </h2>
+        )}
         <div className={`grid grid-cols-1 ${gridCls} gap-8`}>
           {items.map((it, i) => (
             <div key={i} className="text-center">
-              <div className="inline-flex p-3 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mb-4">
-                <DynamicIcon name={it.icon} className="h-6 w-6" />
-              </div>
+              {it.image_url ? (
+                <div className="relative w-full aspect-[4/3] mb-5 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900">
+                  <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                </div>
+              ) : (
+                <div className="inline-flex p-3 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mb-4">
+                  <DynamicIcon name={it.icon} className="h-6 w-6" />
+                </div>
+              )}
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{it.title}</h3>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{it.body}</p>
             </div>
@@ -346,6 +358,53 @@ export function FaqSection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
+// GALLERY (画像のみで雰囲気を伝える)
+// =============================================================================
+export function GallerySection({ props }: { props: AnyProps }) {
+  const items = (props.items as { image_url?: string; alt?: string; caption?: string }[] | undefined) ?? []
+  const heading = String(props.heading ?? "")
+  const subheading = String(props.subheading ?? "")
+  if (items.length === 0) return null
+  return (
+    <section className="py-20 bg-gradient-to-b from-white to-emerald-50/30 dark:from-gray-950 dark:to-gray-900">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        {(heading || subheading) && (
+          <div className="text-center mb-12">
+            {heading && <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{heading}</h2>}
+            {subheading && <p className="mt-3 text-base text-gray-600 dark:text-gray-300">{subheading}</p>}
+          </div>
+        )}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          {items.map((it, i) => (
+            <figure
+              key={i}
+              className={`relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900 ${
+                i % 5 === 0 ? "aspect-[4/5] md:row-span-2" : "aspect-square"
+              }`}
+            >
+              {it.image_url && (
+                <Image
+                  src={it.image_url}
+                  alt={it.alt ?? it.caption ?? ""}
+                  fill
+                  className="object-cover transition-transform duration-500 hover:scale-105"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+              )}
+              {it.caption && (
+                <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2 text-xs text-white">
+                  {it.caption}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
 // CTA_BANNER
 // =============================================================================
 export function CtaBannerSection({ props }: { props: AnyProps }) {
@@ -371,7 +430,7 @@ export function CtaBannerSection({ props }: { props: AnyProps }) {
 // TOOLS_PROMO
 // =============================================================================
 export function ToolsPromoSection({ props }: { props: AnyProps }) {
-  const items = (props.items as { href?: string; icon?: string; title?: string; body?: string }[] | undefined) ?? []
+  const items = (props.items as { href?: string; icon?: string; title?: string; body?: string; image_url?: string }[] | undefined) ?? []
   if (items.length === 0) return null
   return (
     <section className="py-20 bg-white dark:bg-gray-950">
@@ -380,7 +439,12 @@ export function ToolsPromoSection({ props }: { props: AnyProps }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {items.map((it, i) => (
             <Link key={i} href={it.href ?? "#"}>
-              <Card className="hover:shadow-lg transition-shadow h-full">
+              <Card className="hover:shadow-lg transition-shadow h-full overflow-hidden">
+                {it.image_url && (
+                  <div className="relative w-full aspect-[16/10] bg-gray-100 dark:bg-gray-900">
+                    <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                  </div>
+                )}
                 <CardContent className="p-6">
                   <DynamicIcon name={it.icon} className="h-6 w-6 text-emerald-600" />
                   <h3 className="mt-3 font-semibold text-gray-900 dark:text-gray-100">{it.title}</h3>

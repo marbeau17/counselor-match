@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/**" },
       // 将来用: Google ユーザーコンテンツ
       { protocol: "https", hostname: "*.googleusercontent.com" },
+      // Unsplash (LP セクション用ストック画像)
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
 }

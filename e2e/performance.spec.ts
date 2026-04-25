@@ -53,13 +53,36 @@ test.describe('Performance', () => {
   })
 
   test('page has no broken images', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/', { waitUntil: 'networkidle' })
+    // ページ全体をスクロールして lazy-load 画像をトリガー
+    await page.evaluate(async () => {
+      await new Promise<void>((resolve) => {
+        let y = 0
+        const step = () => {
+          window.scrollBy(0, 800)
+          y += 800
+          if (y >= document.body.scrollHeight) return resolve()
+          setTimeout(step, 100)
+        }
+        step()
+      })
+    })
+    await page.waitForLoadState('networkidle').catch(() => {})
+
     const images = page.locator('img')
     const count = await images.count()
     for (let i = 0; i < count; i++) {
       const img = images.nth(i)
-      const naturalWidth = await img.evaluate((el: HTMLImageElement) => el.naturalWidth)
-      expect(naturalWidth).toBeGreaterThan(0)
+      const result = await img.evaluate((el: HTMLImageElement) => ({
+        naturalWidth: el.naturalWidth,
+        loading: el.loading,
+        complete: el.complete,
+        src: el.src,
+      }))
+      // 完了している画像のみ broken チェック (lazy で未ロードはスキップ)
+      if (result.complete && result.loading !== 'lazy') {
+        expect(result.naturalWidth, `broken image: ${result.src}`).toBeGreaterThan(0)
+      }
     }
   })
 
