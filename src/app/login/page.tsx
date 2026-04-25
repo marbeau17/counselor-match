@@ -104,8 +104,11 @@ export default function LoginPage() {
             Googleでログイン
           </Button>
         </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
+        <CardFooter className="flex flex-col gap-2 items-center">
+          <Link href="/forgot-password" className="text-xs text-gray-500 dark:text-gray-400 hover:text-emerald-600 hover:underline">
+            パスワードを忘れた方はこちら
+          </Link>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             アカウントをお持ちでない方は{" "}
             <Link href="/register" className="text-emerald-600 hover:underline font-medium">
               新規登録

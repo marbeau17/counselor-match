@@ -3,6 +3,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js"
 import { getStripeOptional } from "@/lib/stripe"
 import { generateMeetingUrl } from "@/lib/video"
+import { sendBookingConfirmation, sendBookingNotificationToCounselor } from "@/lib/email"
 
 // payments テーブルは RLS で書込ポリシーなし → service_role 経由で INSERT
 function getAdminClient() {
@@ -95,33 +96,104 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Stripe PaymentIntent (任意機能、未設定時は clientSecret: null で完了)
-    let clientSecret: string | null = null
+    // Stripe Checkout Session (任意機能、未設定時は checkoutUrl: null)
+    let checkoutUrl: string | null = null
     const stripe = getStripeOptional()
     if (stripe) {
       try {
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: price,
-          currency: "jpy",
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+        const counselorName =
+          counselor.profiles?.display_name ||
+          counselor.profiles?.full_name ||
+          "カウンセラー"
+        const session = await stripe.checkout.sessions.create({
+          mode: "payment",
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              price_data: {
+                currency: "jpy",
+                product_data: {
+                  name: `${counselorName} とのセッション (${duration_minutes}分)`,
+                  description: `予約日時: ${new Date(scheduled_at).toLocaleString("ja-JP")}`,
+                },
+                unit_amount: price,
+              },
+              quantity: 1,
+            },
+          ],
+          success_url: `${baseUrl}/booking/success?session_id={CHECKOUT_SESSION_ID}&booking_id=${booking.id}`,
+          cancel_url: `${baseUrl}/booking/${counselor.id}?cancelled=1`,
           metadata: {
             booking_id: booking.id,
             counselor_id: counselor.id,
             client_id: user.id,
           },
-          ...(counselor.stripe_account_id && {
-            transfer_data: {
-              destination: counselor.stripe_account_id,
-              amount: counselorPayout,
-            },
-          }),
         })
-        clientSecret = paymentIntent.client_secret
+        checkoutUrl = session.url
       } catch (stripeErr) {
-        console.error("[bookings] stripe error (continuing without payment intent)", stripeErr)
+        console.error("[bookings] stripe checkout error (continuing without payment)", stripeErr)
       }
     }
 
-    return NextResponse.json({ booking, clientSecret })
+    // メール通知（client + counselor 双方）
+    if (admin) {
+      try {
+        const { data: clientProfile } = await admin
+          .from("profiles")
+          .select("email, full_name, display_name")
+          .eq("id", user.id)
+          .single()
+        const { data: counselorProfile } = await admin
+          .from("profiles")
+          .select("email, full_name, display_name")
+          .eq("id", counselor.user_id)
+          .single()
+
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+        const counselorName =
+          counselorProfile?.display_name ||
+          counselorProfile?.full_name ||
+          "カウンセラー"
+        const clientName =
+          clientProfile?.display_name ||
+          clientProfile?.full_name ||
+          "クライアント"
+
+        // 並列送信、失敗しても booking は成立扱い
+        await Promise.allSettled([
+          clientProfile?.email
+            ? sendBookingConfirmation({
+                to: clientProfile.email,
+                clientName,
+                counselorName,
+                scheduledAt: scheduled_at,
+                durationMinutes: duration_minutes,
+                sessionType: session_type,
+                meetingUrl: booking.meeting_url,
+                bookingId: booking.id,
+                appUrl: baseUrl,
+              })
+            : Promise.resolve(),
+          counselorProfile?.email
+            ? sendBookingNotificationToCounselor({
+                to: counselorProfile.email,
+                counselorName,
+                clientName,
+                scheduledAt: scheduled_at,
+                durationMinutes: duration_minutes,
+                sessionType: session_type,
+                notes,
+                appUrl: baseUrl,
+              })
+            : Promise.resolve(),
+        ])
+      } catch (mailErr) {
+        console.error("[bookings] email notification error (continuing)", mailErr)
+      }
+    }
+
+    return NextResponse.json({ booking, checkoutUrl })
   } catch (e: unknown) {
     console.error("[bookings] unexpected error", e)
     const message = e instanceof Error ? e.message : "Internal Server Error"

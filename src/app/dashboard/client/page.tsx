@@ -154,9 +154,16 @@ export default async function ClientDashboardPage() {
                     <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.counselor?.profiles?.display_name || booking.counselor?.profiles?.full_name || "カウンセラー"}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(booking.scheduled_at)}</p>
                   </div>
-                  <Badge variant={statusVariants[booking.status]}>{statusLabels[booking.status]}</Badge>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={statusVariants[booking.status]}>{statusLabels[booking.status]}</Badge>
+                    {booking.status === "completed" && (
+                      <Link href={`/dashboard/client/review/${booking.id}`}>
+                        <Button size="sm" variant="outline">レビューを書く</Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

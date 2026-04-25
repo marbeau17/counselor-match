@@ -129,6 +129,12 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
         throw new Error(data.error || "予約の作成に失敗しました。")
       }
 
+      const data = await res.json()
+      // Stripe Checkout がある場合は決済ページへリダイレクト
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl
+        return
+      }
       setSuccess(true)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "予約の作成に失敗しました。もう一度お試しください。"

@@ -22,6 +22,29 @@ export async function POST(request: NextRequest) {
   )
 
   switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session
+      const bookingId = session.metadata?.booking_id
+      if (bookingId && session.payment_status === "paid") {
+        await supabaseAdmin
+          .from("payments")
+          .update({
+            status: "paid",
+            stripe_payment_intent_id:
+              typeof session.payment_intent === "string"
+                ? session.payment_intent
+                : session.payment_intent?.id,
+          })
+          .eq("booking_id", bookingId)
+
+        await supabaseAdmin
+          .from("bookings")
+          .update({ status: "confirmed" })
+          .eq("id", bookingId)
+      }
+      break
+    }
+
     case "payment_intent.succeeded": {
       const paymentIntent = event.data.object as Stripe.PaymentIntent
       const bookingId = paymentIntent.metadata?.booking_id

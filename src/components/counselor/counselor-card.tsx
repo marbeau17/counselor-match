@@ -24,6 +24,8 @@ const levelVariants: Record<string, "default" | "secondary" | "warning" | "destr
 
 interface CounselorCardProps {
   counselor: Counselor & { profiles?: Profile }
+  /** above-the-fold（最初の数枚）は priority=true で画像を eager load */
+  priority?: boolean
 }
 
 function AvailabilityBadge({ mode }: { mode?: AvailabilityMode }) {
@@ -60,7 +62,7 @@ function AvailabilityBadge({ mode }: { mode?: AvailabilityMode }) {
   return null
 }
 
-export function CounselorCard({ counselor }: CounselorCardProps) {
+export function CounselorCard({ counselor, priority = false }: CounselorCardProps) {
   const name = counselor.profiles?.display_name || counselor.profiles?.full_name || "カウンセラー"
   const showPerMinute = counselor.on_demand_enabled === true && counselor.price_per_minute
   const concernSlugs = (counselor.concerns || []).slice(0, 3)
@@ -76,6 +78,7 @@ export function CounselorCard({ counselor }: CounselorCardProps) {
             src={counselor.profiles?.avatar_url}
             alt={name}
             size="lg"
+            priority={priority}
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">

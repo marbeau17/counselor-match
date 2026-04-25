@@ -249,8 +249,8 @@ export default function CounselorsPage() {
               </CardContent>
             </Card>
           ) : (
-            filtered.map((counselor) => (
-              <CounselorCard key={counselor.id} counselor={counselor} />
+            filtered.map((counselor, i) => (
+              <CounselorCard key={counselor.id} counselor={counselor} priority={i < 3} />
             ))
           )}
         </div>

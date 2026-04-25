@@ -8,6 +8,8 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   alt?: string
   fallback?: string
   size?: "sm" | "md" | "lg" | "xl"
+  /** above-the-fold で表示する画像は priority=true で eager + high priority に */
+  priority?: boolean
 }
 
 const sizeClasses = {
@@ -17,7 +19,7 @@ const sizeClasses = {
   xl: "h-16 w-16 text-lg",
 }
 
-function Avatar({ className, src, alt, fallback, size = "md", ...props }: AvatarProps) {
+function Avatar({ className, src, alt, fallback, size = "md", priority = false, ...props }: AvatarProps) {
   const [imgError, setImgError] = React.useState(false)
 
   const initials = fallback || alt?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?'
@@ -31,8 +33,9 @@ function Avatar({ className, src, alt, fallback, size = "md", ...props }: Avatar
           src={src}
           alt={alt || ''}
           className="h-full w-full object-cover"
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
           decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
           onError={() => setImgError(true)}
         />
       ) : (
