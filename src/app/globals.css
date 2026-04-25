@@ -1,20 +1,63 @@
 @import "tailwindcss";
 
-/* Tailwind v4: クラスベースのダークモード（class="dark" が先祖要素にあれば dark variant 適用） */
+/* Tailwind v4: クラスベースのダークモード */
 @variant dark (&:where(.dark, .dark *));
 
+/* ================================================================
+ * デザイントークン (LP リデザイン Phase 1)
+ * 旧 emerald 単色 → 大地系 warm パレットに刷新
+ * spec: docs/lp_redesign_spec.md §4.1
+ * ================================================================ */
+@theme {
+  /* warm off-white ベース */
+  --color-base: #FAF7F2;
+  --color-card: #FFFFFF;
+
+  /* 文字色 */
+  --color-primary: #2A2A2A;
+  --color-secondary: #5C5854;
+  --color-muted: #8A857F;
+
+  /* アクセント (LP メイン色) */
+  --color-accent-primary: #7C5E3C;     /* deep beige (見出し / link) */
+  --color-accent-secondary: #A8B5A0;   /* sage (badge / hover) */
+  --color-accent-warm: #D4A574;        /* terracotta light (CTA Btn) */
+  --color-accent-quiet: #E8DDD0;       /* cream (divider / soft bg) */
+
+  /* dark mode */
+  --color-dark-bg: #1A1714;
+  --color-dark-card: #252220;
+
+  /* font-family */
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-serif);
+  --font-accent: var(--font-accent);
+}
+
 :root {
-  --color-primary: #059669;
-  --color-primary-light: #d1fae5;
+  --color-emerald-legacy: #059669; /* 旧コンポーネント残存用 */
 }
 
 body {
-  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-feature-settings: "palt";
+}
+
+/* ヒエラルキー: 見出しは serif */
+h1, h2, h3 {
+  font-family: var(--font-serif, serif);
+  letter-spacing: -0.005em;
+}
+
+/* italic accent クラス (英文 / カードラベル用) */
+.font-accent {
+  font-family: var(--font-accent, serif);
+  font-style: italic;
 }
 
 html.dark body {
-  background-color: #0a0a0a;
-  color: #e5e7eb;
+  background-color: #1A1714;
+  color: #E8E2D8;
 }
 
 @keyframes marquee {
@@ -23,4 +66,20 @@ html.dark body {
 }
 .animate-marquee {
   animation: marquee 30s linear infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadein {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.04); }
+}
+.animate-slow-zoom {
+  animation: slowZoom 8s ease-out both;
 }

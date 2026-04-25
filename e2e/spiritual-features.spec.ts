@@ -18,10 +18,11 @@ test.describe('Landing — new brand positioning', () => {
 
   test('hero heading contains new positioning copy', async ({ page }) => {
     await page.goto('/')
-    // 新コピー (fb8db0a の LP 動的化以降): "心と関係を整える、伴走型のスピリチュアル・カウンセリング"
-    // 旧コピー: "占いを超えた」「魂のための"
+    // LP リデザイン (Phase 21+): 「ほどく」 / 「整える」 を含む
+    // 過去の互換: "スピリチュアル/伴走/占いを超えた/魂のための" も許容
     const heading = page
-      .getByRole('heading', { name: /スピリチュアル|伴走/ })
+      .getByRole('heading', { name: /ほどく|整える/ })
+      .or(page.getByRole('heading', { name: /スピリチュアル|伴走/ }))
       .or(page.getByRole('heading', { name: /占いを超えた/ }))
       .or(page.getByRole('heading', { name: /魂のための/ }))
     await expect(heading.first()).toBeVisible()

@@ -24,6 +24,7 @@ export const SECTION_LABELS: Record<string, string> = {
   video_embed: "動画埋込",
   certifications: "認定 / 資格",
   gallery: "ギャラリー (画像群)",
+  story_narrative: "ストーリー (ナラティブ長文)",
 }
 
 export const SECTION_TYPES = Object.keys(SECTION_LABELS)

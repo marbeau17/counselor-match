@@ -11,38 +11,119 @@ import { createClient } from "@/lib/supabase/server"
 type AnyProps = Record<string, unknown>
 
 // =============================================================================
-// HERO
+// HERO (split layout: 左 serif 見出し / 右 人物写真)
 // =============================================================================
 export function HeroSection({ props }: { props: AnyProps }) {
   const headline = String(props.headline ?? "")
   const subheadline = String(props.subheadline ?? "")
   const ctaLabel = String(props.cta_label ?? "")
   const ctaUrl = String(props.cta_url ?? "/counselors")
-  const bg = props.bg_image_url as string | undefined
+  const subCtaLabel = props.sub_cta_label ? String(props.sub_cta_label) : null
+  const subCtaUrl = props.sub_cta_url ? String(props.sub_cta_url) : null
+  const accentLabel = props.accent_label ? String(props.accent_label) : null
+  const photoUrl = props.photo_url as string | undefined
+  const photoAlt = String(props.photo_alt ?? "")
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-950">
-      {bg && (
-        <div className="absolute inset-0 -z-10 opacity-30">
-          <Image src={bg} alt="" fill className="object-cover" priority />
-        </div>
-      )}
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
-        <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
-          {headline}
-        </h1>
-        {subheadline && (
-          <p className="mt-6 text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {subheadline}
-          </p>
-        )}
-        {ctaLabel && (
-          <div className="mt-10">
-            <Link href={ctaUrl}>
-              <Button size="lg">{ctaLabel} <ArrowRight className="ml-2 h-4 w-4" /></Button>
-            </Link>
+    <section className="relative overflow-hidden bg-base dark:bg-gray-950">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* 左: テキスト 7 col */}
+          <div className="lg:col-span-7 animate-fadein">
+            {accentLabel && (
+              <p className="font-accent text-lg text-accent-primary mb-6 tracking-wide">
+                {accentLabel}
+              </p>
+            )}
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-primary dark:text-gray-100 leading-[1.4] tracking-normal font-medium">
+              {headline.split("\n").map((line, i) => (
+                <span key={i} className="block">{line}</span>
+              ))}
+            </h1>
+            {subheadline && (
+              <p className="mt-8 text-base sm:text-lg text-secondary dark:text-gray-300 leading-loose max-w-xl">
+                {subheadline}
+              </p>
+            )}
+            {(ctaLabel || subCtaLabel) && (
+              <div className="mt-10 flex flex-wrap gap-4 items-center">
+                {ctaLabel && (
+                  <Link href={ctaUrl}>
+                    <Button
+                      size="lg"
+                      className="bg-accent-warm hover:bg-accent-primary text-white border-0 shadow-sm hover:shadow-md transition-all rounded-full px-8 py-6 text-base"
+                    >
+                      {ctaLabel} <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
+                {subCtaLabel && subCtaUrl && (
+                  <Link
+                    href={subCtaUrl}
+                    className="text-secondary hover:text-accent-primary underline underline-offset-4 transition-colors"
+                  >
+                    {subCtaLabel}
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* 右: 人物写真 5 col (mobile では先頭に来ないよう order) */}
+          {photoUrl && (
+            <div className="lg:col-span-5 order-first lg:order-last">
+              <div className="relative w-full aspect-[4/5] overflow-hidden rounded-tl-[80px] rounded-br-[80px] rounded-tr-md rounded-bl-md bg-accent-quiet/40">
+                <Image
+                  src={photoUrl}
+                  alt={photoAlt}
+                  fill
+                  className="object-cover animate-slow-zoom"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  priority
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// STORY (新規: ナラティブな共感セクション)
+// =============================================================================
+export function StoryNarrativeSection({ props }: { props: AnyProps }) {
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
+  const heading = props.heading ? String(props.heading) : null
+  const paragraphs = (props.paragraphs as string[] | undefined) ?? []
+  const signature = props.signature ? String(props.signature) : null
+  if (paragraphs.length === 0) return null
+  return (
+    <section className="bg-base dark:bg-gray-950 py-20 sm:py-28">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <article className="prose-quiet">
+          {eyebrow && (
+            <p className="font-accent text-base text-accent-primary mb-4 tracking-wide">
+              — {eyebrow}
+            </p>
+          )}
+          {heading && (
+            <h2 className="font-serif text-2xl sm:text-3xl text-primary dark:text-gray-100 mb-10 leading-relaxed font-medium">
+              {heading}
+            </h2>
+          )}
+          <div className="space-y-7 text-base sm:text-lg text-secondary dark:text-gray-300 leading-loose">
+            {paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+          {signature && (
+            <p className="mt-12 text-sm text-muted dark:text-gray-500 font-accent italic">
+              — {signature}
+            </p>
+          )}
+        </article>
       </div>
     </section>
   )
@@ -107,35 +188,48 @@ export function TrustBarSection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
-// FEATURES
+// FEATURES (改修: ナンバリング + 縦線アクセント, warm カラー)
 // =============================================================================
 export function FeaturesSection({ props }: { props: AnyProps }) {
   const items = (props.items as { icon?: string; title?: string; body?: string; image_url?: string }[] | undefined) ?? []
   const cols = (props.columns as number | undefined) ?? 3
   const gridCls = cols === 4 ? "md:grid-cols-4" : cols === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
   const heading = String(props.heading ?? "")
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
   return (
-    <section className="py-20 bg-white dark:bg-gray-950">
+    <section className="py-20 sm:py-28 bg-base dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {heading && (
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
-            {heading}
-          </h2>
+        {(heading || eyebrow) && (
+          <div className="text-center mb-14">
+            {eyebrow && (
+              <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">
+                — {eyebrow}
+              </p>
+            )}
+            {heading && (
+              <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+                {heading}
+              </h2>
+            )}
+          </div>
         )}
-        <div className={`grid grid-cols-1 ${gridCls} gap-8`}>
+        <div className={`grid grid-cols-1 ${gridCls} gap-10 sm:gap-12`}>
           {items.map((it, i) => (
-            <div key={i} className="text-center">
-              {it.image_url ? (
-                <div className="relative w-full aspect-[4/3] mb-5 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900">
+            <div key={i} className="text-left animate-fadein" style={{ animationDelay: `${i * 100}ms` }}>
+              {it.image_url && (
+                <div className="relative w-full aspect-[4/5] mb-6 overflow-hidden rounded-tl-3xl rounded-br-3xl bg-accent-quiet/40">
                   <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                 </div>
-              ) : (
-                <div className="inline-flex p-3 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mb-4">
-                  <DynamicIcon name={it.icon} className="h-6 w-6" />
-                </div>
               )}
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{it.title}</h3>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{it.body}</p>
+              <p className="font-accent text-sm text-accent-primary mb-2 tracking-wider">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="font-serif text-xl sm:text-2xl text-primary dark:text-gray-100 mb-3 font-medium leading-snug">
+                {it.title}
+              </h3>
+              <p className="text-sm sm:text-base text-secondary dark:text-gray-400 leading-loose">
+                {it.body}
+              </p>
             </div>
           ))}
         </div>
@@ -145,27 +239,46 @@ export function FeaturesSection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
-// HOW_IT_WORKS
+// HOW_IT_WORKS (改修: warm card + serif heading)
 // =============================================================================
 export function HowItWorksSection({ props }: { props: AnyProps }) {
   const items = (props.items as { step?: number; title?: string; body?: string; image_url?: string }[] | undefined) ?? []
+  const heading = props.heading ? String(props.heading) : "ご利用の流れ"
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-900">
+    <section className="py-20 sm:py-28 bg-accent-quiet/20 dark:bg-gray-900">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
-          ご利用の流れ
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="text-center mb-14">
+          {eyebrow && (
+            <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">
+              — {eyebrow}
+            </p>
+          )}
+          <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+            {heading}
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {items.map((it, i) => (
-            <div key={i} className="bg-white dark:bg-gray-950 rounded-lg p-6 border border-gray-100 dark:border-gray-800">
+            <div
+              key={i}
+              className="bg-card dark:bg-gray-950 p-7 border border-accent-quiet/60 dark:border-gray-800 rounded-tl-2xl rounded-br-2xl"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
               {it.image_url && (
-                <div className="relative w-full h-32 mb-4 rounded overflow-hidden">
-                  <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" />
+                <div className="relative w-full h-36 mb-5 rounded overflow-hidden">
+                  <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
                 </div>
               )}
-              <div className="text-emerald-600 font-bold text-sm">STEP {String(it.step ?? i + 1).padStart(2, "0")}</div>
-              <h3 className="mt-2 text-base font-semibold text-gray-900 dark:text-gray-100">{it.title}</h3>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{it.body}</p>
+              <p className="font-accent text-base text-accent-primary tracking-wider">
+                Step {String(it.step ?? i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="mt-2 font-serif text-lg text-primary dark:text-gray-100 font-medium leading-snug">
+                {it.title}
+              </h3>
+              <p className="mt-3 text-sm text-secondary dark:text-gray-400 leading-loose">
+                {it.body}
+              </p>
             </div>
           ))}
         </div>
@@ -242,38 +355,57 @@ export async function CounselorShowcaseSection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
-// TESTIMONIALS
+// TESTIMONIALS (改修: 縦長引用カード, 大きな引用符, editorial)
 // =============================================================================
 export function TestimonialsSection({ props }: { props: AnyProps }) {
   const items = (props.items as { name?: string; role?: string; comment?: string; avatar_url?: string; rating?: number }[] | undefined) ?? []
+  const heading = props.heading ? String(props.heading) : "ご利用いただいた方の声"
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
   if (items.length === 0) return null
   return (
-    <section className="py-20 bg-emerald-50 dark:bg-gray-900">
+    <section className="py-20 sm:py-28 bg-base dark:bg-gray-900">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
-          ご利用いただいた方の声
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="text-center mb-14">
+          {eyebrow && (
+            <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">
+              — {eyebrow}
+            </p>
+          )}
+          <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+            {heading}
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {items.map((it, i) => (
-            <Card key={i}>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <Avatar src={it.avatar_url} alt={it.name ?? ""} size="md" />
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">{it.name}</p>
-                    <p className="text-xs text-gray-500">{it.role}</p>
-                  </div>
+            <figure
+              key={i}
+              className="relative bg-card dark:bg-gray-950 p-8 sm:p-10 rounded-tl-3xl rounded-br-3xl border border-accent-quiet/60 dark:border-gray-800 animate-fadein"
+              style={{ animationDelay: `${i * 100}ms` }}
+            >
+              <span
+                aria-hidden
+                className="font-serif text-7xl text-accent-primary/30 leading-none absolute top-4 left-6"
+              >
+                &ldquo;
+              </span>
+              {it.rating && (
+                <div className="flex gap-0.5 mb-4 relative">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <Star key={j} className={`h-3.5 w-3.5 ${j < (it.rating ?? 0) ? "text-accent-warm fill-accent-warm" : "text-gray-300"}`} />
+                  ))}
                 </div>
-                {it.rating && (
-                  <div className="mt-3 flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Star key={j} className={`h-3 w-3 ${j < (it.rating ?? 0) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`} />
-                    ))}
-                  </div>
-                )}
-                <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{it.comment}</p>
-              </CardContent>
-            </Card>
+              )}
+              <blockquote className="relative font-serif text-base sm:text-lg text-primary dark:text-gray-100 leading-loose mb-6">
+                {it.comment}
+              </blockquote>
+              <figcaption className="flex items-center gap-3 pt-5 border-t border-accent-quiet/60 dark:border-gray-800">
+                <Avatar src={it.avatar_url} alt={it.name ?? ""} size="md" />
+                <div>
+                  <p className="text-sm font-medium text-primary dark:text-gray-100">{it.name}</p>
+                  <p className="text-xs text-muted dark:text-gray-500">{it.role}</p>
+                </div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
@@ -358,20 +490,34 @@ export function FaqSection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
-// GALLERY (画像のみで雰囲気を伝える)
+// GALLERY (画像のみで雰囲気を伝える / warm version)
 // =============================================================================
 export function GallerySection({ props }: { props: AnyProps }) {
   const items = (props.items as { image_url?: string; alt?: string; caption?: string }[] | undefined) ?? []
   const heading = String(props.heading ?? "")
   const subheading = String(props.subheading ?? "")
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
   if (items.length === 0) return null
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-emerald-50/30 dark:from-gray-950 dark:to-gray-900">
+    <section className="py-20 sm:py-28 bg-base dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {(heading || subheading) && (
-          <div className="text-center mb-12">
-            {heading && <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{heading}</h2>}
-            {subheading && <p className="mt-3 text-base text-gray-600 dark:text-gray-300">{subheading}</p>}
+        {(heading || subheading || eyebrow) && (
+          <div className="text-center mb-14">
+            {eyebrow && (
+              <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">
+                — {eyebrow}
+              </p>
+            )}
+            {heading && (
+              <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+                {heading}
+              </h2>
+            )}
+            {subheading && (
+              <p className="mt-4 text-base text-secondary dark:text-gray-300 max-w-xl mx-auto leading-loose">
+                {subheading}
+              </p>
+            )}
           </div>
         )}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -405,20 +551,38 @@ export function GallerySection({ props }: { props: AnyProps }) {
 }
 
 // =============================================================================
-// CTA_BANNER
+// CTA_BANNER (改修: warm + serif, soft layered bg)
 // =============================================================================
 export function CtaBannerSection({ props }: { props: AnyProps }) {
   const bg = props.bg_image_url as string | undefined
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : null
   return (
-    <section className="relative py-20 overflow-hidden">
-      {bg && <Image src={bg} alt="" fill className="object-cover -z-10 opacity-40" />}
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-700 -z-20" />
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center text-white">
-        <h2 className="text-2xl sm:text-3xl font-bold">{String(props.headline ?? "")}</h2>
-        {props.subheadline ? <p className="mt-4 text-lg opacity-90">{String(props.subheadline)}</p> : null}
+    <section className="relative py-24 sm:py-32 overflow-hidden">
+      {bg && (
+        <Image src={bg} alt="" fill className="object-cover -z-10 opacity-50" sizes="100vw" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/85 to-accent-warm/70 -z-20" />
+      <div className="absolute inset-0 bg-primary/20 -z-30" />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center text-white">
+        {eyebrow && (
+          <p className="font-accent text-base text-white/80 mb-4 tracking-wide">— {eyebrow}</p>
+        )}
+        <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-snug font-medium">
+          {String(props.headline ?? "")}
+        </h2>
+        {props.subheadline ? (
+          <p className="mt-6 text-base sm:text-lg text-white/90 leading-loose max-w-xl mx-auto">
+            {String(props.subheadline)}
+          </p>
+        ) : null}
         {props.cta_label ? (
           <Link href={String(props.cta_url ?? "/register")}>
-            <Button size="lg" variant="secondary" className="mt-8">{String(props.cta_label)}</Button>
+            <Button
+              size="lg"
+              className="mt-10 bg-white hover:bg-accent-quiet text-accent-primary border-0 shadow-md hover:shadow-lg rounded-full px-8 py-6 text-base"
+            >
+              {String(props.cta_label)} <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </Link>
         ) : null}
       </div>

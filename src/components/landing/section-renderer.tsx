@@ -6,6 +6,7 @@ import {
   StatsCounterSection, BeforeAfterSection, StorySection,
   LeadCaptureSection, RichTextSection, MarqueeSection,
   VideoEmbedSection, CertificationsSection, GallerySection,
+  StoryNarrativeSection,
 } from "./sections"
 
 export { SECTION_LABELS, SECTION_TYPES } from "./section-types"
@@ -37,6 +38,7 @@ export const SECTION_REGISTRY: Record<string, SectionComp> = {
   video_embed: VideoEmbedSection,
   certifications: CertificationsSection,
   gallery: GallerySection,
+  story_narrative: StoryNarrativeSection,
 }
 
 export async function SectionRenderer({

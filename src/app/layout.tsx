@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Noto_Serif_JP, Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -13,6 +13,23 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+})
+
+// LP / editorial 用 serif (見出し・引用)
+const notoSerifJP = Noto_Serif_JP({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+})
+
+// 装飾用 italic accent (英文 / カードラベル)
+const cormorant = Cormorant_Garamond({
+  variable: "--font-accent",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["italic"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -57,7 +74,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSerifJP.variable} ${cormorant.variable} antialiased bg-base text-primary dark:bg-gray-950 dark:text-gray-100`}
       >
         <div className="flex min-h-screen flex-col">
           <Header
