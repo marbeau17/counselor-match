@@ -2,7 +2,14 @@ import type { NextConfig } from "next"
 import { withSentryConfig } from "@sentry/nextjs"
 
 const nextConfig: NextConfig = {
-  // ここにアプリ固有設定があれば追加
+  images: {
+    remotePatterns: [
+      // Supabase Storage (全プロジェクト)
+      { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/**" },
+      // 将来用: Google ユーザーコンテンツ
+      { protocol: "https", hostname: "*.googleusercontent.com" },
+    ],
+  },
 }
 
 const sentryEnabled = !!(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN)
