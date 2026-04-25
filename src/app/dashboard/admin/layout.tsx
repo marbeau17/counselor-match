@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import {
   LayoutDashboard, Users, UserCheck, Calendar, FileText, MessageSquare,
   AlertTriangle, Megaphone, Search, Activity, ShieldCheck,
+  Image as ImageIcon, Layers, Settings as SettingsIcon, Sparkles,
 } from "lucide-react"
 
 const NAV_SECTIONS: { title: string; items: { href: string; label: string; icon: typeof LayoutDashboard }[] }[] = [
@@ -37,8 +38,17 @@ const NAV_SECTIONS: { title: string; items: { href: string; label: string; icon:
     ],
   },
   {
+    title: "LP / メディア",
+    items: [
+      { href: "/dashboard/admin/landing", label: "ランディング編集", icon: Layers },
+      { href: "/dashboard/admin/images", label: "画像ライブラリ", icon: ImageIcon },
+      { href: "/dashboard/admin/images/templates", label: "プロンプトテンプレ", icon: Sparkles },
+    ],
+  },
+  {
     title: "システム",
     items: [
+      { href: "/dashboard/admin/settings", label: "設定", icon: SettingsIcon },
       { href: "/dashboard/admin/audit", label: "監査ログ", icon: ShieldCheck },
       { href: "/dashboard/admin/health", label: "システムヘルス", icon: Activity },
     ],

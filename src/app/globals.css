@@ -16,3 +16,11 @@ html.dark body {
   background-color: #0a0a0a;
   color: #e5e7eb;
 }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
