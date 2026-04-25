@@ -1,4 +1,11 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Locator } from '@playwright/test'
+
+/** WebKit で fill が反映されない race を回避するための堅牢化 fill ヘルパー */
+async function safeFill(locator: Locator, value: string) {
+  await locator.waitFor({ state: 'visible' })
+  await locator.click()
+  await locator.fill(value)
+}
 
 test.describe('Login Authentication', () => {
   test.beforeEach(async ({ page }) => {
@@ -43,34 +50,34 @@ test.describe('Login Authentication', () => {
   })
 
   test('submit button changes text on form submit', async ({ page }) => {
-    await page.getByLabel('メールアドレス').fill('test@example.com')
-    await page.getByLabel('パスワード').fill('password123')
+    await safeFill(page.getByLabel('メールアドレス'), 'test@example.com')
+    await safeFill(page.getByLabel('パスワード'), 'password123')
 
     // Click submit
     await page.locator('form button[type="submit"]').click()
 
     // After submission, error message should appear (since credentials are invalid)
-    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません。')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません。')).toBeVisible({ timeout: 15000 })
   })
 
   test('shows error message on invalid credentials', async ({ page }) => {
-    await page.getByLabel('メールアドレス').fill('invalid@example.com')
-    await page.getByLabel('パスワード').fill('wrongpassword')
+    await safeFill(page.getByLabel('メールアドレス'), 'invalid@example.com')
+    await safeFill(page.getByLabel('パスワード'), 'wrongpassword')
 
     await page.locator('form button[type="submit"]').click()
 
     // Wait for error message to appear
-    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません')).toBeVisible({ timeout: 15000 })
   })
 
   test('form submit triggers authentication attempt', async ({ page }) => {
-    await page.getByLabel('メールアドレス').fill('wrong@example.com')
-    await page.getByLabel('パスワード').fill('wrongpass123')
+    await safeFill(page.getByLabel('メールアドレス'), 'wrong@example.com')
+    await safeFill(page.getByLabel('パスワード'), 'wrongpass123')
 
     await page.locator('form button[type="submit"]').click()
 
     // After failed auth, error message should appear
-    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('メールアドレスまたはパスワードが正しくありません')).toBeVisible({ timeout: 15000 })
     // Button should be re-enabled after error
     await expect(page.locator('form button[type="submit"]')).toBeEnabled()
   })
@@ -135,9 +142,9 @@ test.describe('Registration Page Authentication', () => {
   })
 
   test('can fill out registration form', async ({ page }) => {
-    await page.getByLabel('お名前').fill('テスト太郎')
-    await page.getByLabel('メールアドレス').fill('test@example.com')
-    await page.getByLabel('パスワード').fill('password123')
+    await safeFill(page.getByLabel('お名前'), 'テスト太郎')
+    await safeFill(page.getByLabel('メールアドレス'), 'test@example.com')
+    await safeFill(page.getByLabel('パスワード'), 'password123')
 
     await expect(page.getByLabel('お名前')).toHaveValue('テスト太郎')
     await expect(page.getByLabel('メールアドレス')).toHaveValue('test@example.com')
@@ -145,16 +152,16 @@ test.describe('Registration Page Authentication', () => {
   })
 
   test('submitting registration form triggers signup attempt', async ({ page }) => {
-    await page.getByLabel('お名前').fill('テスト太郎')
-    await page.getByLabel('メールアドレス').fill('newuser@example.com')
-    await page.getByLabel('パスワード').fill('password123')
+    await safeFill(page.getByLabel('お名前'), 'テスト太郎')
+    await safeFill(page.getByLabel('メールアドレス'), 'newuser@example.com')
+    await safeFill(page.getByLabel('パスワード'), 'password123')
 
     await page.locator('form button[type="submit"]').click()
 
     // Should show either success message or error (depending on Supabase config)
     await expect(
       page.getByText('確認メールを送信しました').or(page.getByText('登録に失敗しました'))
-    ).toBeVisible({ timeout: 10000 })
+    ).toBeVisible({ timeout: 15000 })
   })
 
   test('has link to login page', async ({ page }) => {
