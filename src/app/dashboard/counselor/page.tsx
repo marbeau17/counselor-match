@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { BookingActionButton } from "@/components/booking/booking-action-buttons"
 import { Calendar, Users, TrendingUp } from "lucide-react"
 import { formatPrice, formatDate } from "@/lib/utils"
 
@@ -128,8 +129,8 @@ export default async function CounselorDashboardPage() {
                     <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button size="sm">承認</Button>
-                    <Button size="sm" variant="outline">辞退</Button>
+                    <BookingActionButton bookingId={booking.id} action="approve" />
+                    <BookingActionButton bookingId={booking.id} action="decline" />
                   </div>
                 </div>
               ))}
@@ -162,6 +163,8 @@ export default async function CounselorDashboardPage() {
                         <Button size="sm">セッション参加</Button>
                       </Link>
                     )}
+                    <BookingActionButton bookingId={booking.id} action="complete" />
+                    <BookingActionButton bookingId={booking.id} action="cancel" />
                   </div>
                 </div>
               ))}

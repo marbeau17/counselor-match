@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { BookingActionButton } from "@/components/booking/booking-action-buttons"
 import { Calendar, Clock, Search } from "lucide-react"
 import { formatPrice, formatDate } from "@/lib/utils"
 
@@ -11,7 +12,7 @@ type BookingRow = {
   id: string
   scheduled_at: string
   duration_minutes: number
-  status: keyof typeof statusLabels
+  status: "pending" | "confirmed" | "completed" | "cancelled"
   price: number
   session_type?: string
   meeting_url?: string | null
@@ -125,6 +126,9 @@ export default async function ClientDashboardPage() {
                       <Link href={`/session/${booking.id}`}>
                         <Button size="sm">セッション参加</Button>
                       </Link>
+                    )}
+                    {(booking.status === "pending" || booking.status === "confirmed") && (
+                      <BookingActionButton bookingId={booking.id} action="cancel" />
                     )}
                   </div>
                 </div>
