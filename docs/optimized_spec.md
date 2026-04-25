@@ -198,8 +198,26 @@ NEXTAUTH_SECRET="e2e-dev-secret-for-testing-only-please-change" NEXTAUTH_URL="ht
 
 ### 3.13 Dashboard — Admin (`/dashboard/admin`)
 
-**AC-DA01**: admin ロールで訪問 → `h1`「管理者ダッシュボード」と 4 枚の Stat Card（総ユーザー数 / アクティブカウンセラー / 総予約数 / プラットフォーム収益）が表示される。
+**AC-DA01**: admin ロールで訪問 → `h1`「管理者ダッシュボード」と 4 枚の KPI Card（総ユーザー / 活動カウンセラー / 総予約数 / 総収益）が表示される。
 **AC-DA02**: 非 admin ロールで訪問した場合、適切にリダイレクトされるか 403 相当の挙動（500 は NG）。
+
+### 3.13.1 Admin サブページ (`/dashboard/admin/*`)
+
+すべて admin ロール必須、非 admin は redirect / 403 (500 NG)。各ページの h1 と主要識別要素を検証。
+
+**AC-DAS01** (Users `/dashboard/admin/users`): `h1`「ユーザー管理」+ Btn「適用」(filter) + Btn「詳細」(各 row) が表示される。
+**AC-DAS02** (Counselors `/dashboard/admin/counselors`): `h1`「カウンセラー審査」+ Badge「承認済」or「未承認」が少なくとも 1 件表示される。
+**AC-DAS03** (Bookings `/dashboard/admin/bookings`): `h1`「予約管理」+ session_type 表示 + Btn「詳細」が表示される。
+**AC-DAS04** (Columns `/dashboard/admin/columns`): `h1`「コラム管理」+ Badge「公開中」or「下書き」が表示される。
+**AC-DAS05** (Announcements `/dashboard/admin/announcements`): `h1`「お知らせ管理」+ CardTitle「新規お知らせ」「一覧」が表示される。
+**AC-DAS06** (Reports `/dashboard/admin/reports`): `h1`「通報対応」が表示される（empty state 許容）。
+**AC-DAS07** (Reviews `/dashboard/admin/reviews`): `h1`「レビュー管理」+ Badge「表示中」or「非表示」（データある場合）が表示される。
+**AC-DAS08** (SEO `/dashboard/admin/seo`): `h1`「SEO 管理」+ CardTitle「新規ページ SEO 追加」「登録済みページ」が表示される。
+**AC-DAS09** (Audit `/dashboard/admin/audit`): `h1`「監査ログ」が表示される（empty state 許容）。
+**AC-DAS10** (Health `/dashboard/admin/health`): `h1`「システムヘルス」+ CardTitle「環境チェック」「テーブル件数」が表示される。
+**AC-DAS11** (Landing `/dashboard/admin/landing`): `h1`「ランディング編集」+ セクション編集 UI（h2「セクション追加」or「公開履歴」）が表示される。
+**AC-DAS12** (Settings `/dashboard/admin/settings`): `h1`「設定」+ CardTitle「Gemini Banana Pro (画像生成)」が表示される。
+**AC-DAS13** (Images `/dashboard/admin/images`): `h1`「画像ライブラリ」が表示される（empty state 許容）。
 
 ### 3.14 Dashboard — Journey (`/dashboard/journey`)
 

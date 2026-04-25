@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { loginAs } from './_auth'
+import { dbCount, dbQuery } from './_db'
 
 test.describe('Auth - Booking flow (AC-B06-Auth)', () => {
   test('認証済みクライアントが /booking/[id] で全項目入力 → 予約確定 Btn → Success Card', async ({ page }) => {
@@ -35,5 +36,17 @@ test.describe('Auth - Booking flow (AC-B06-Auth)', () => {
     await expect(page.getByRole('heading', { name: '予約が完了しました' })).toBeVisible({ timeout: 15000 })
     await expect(page.getByRole('link', { name: 'ダッシュボードへ' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'カウンセラー一覧へ' })).toBeVisible()
+
+    // DB 直接検証: e2e_client_001 の田中美咲への新規予約が pending で 1 件以上できている
+    const newBookingCount = dbCount(
+      `SELECT count(*) FROM bookings WHERE client_id = 'e2e00000-0000-0000-0000-000000000001' AND counselor_id = 'c0000000-0000-0000-0000-000000000001' AND notes = 'E2E auth booking test'`
+    )
+    expect(newBookingCount).toBeGreaterThanOrEqual(1)
+
+    // 予約のセッション形式が online、duration 50 分が確定している
+    const status = dbQuery(
+      `SELECT session_type || '|' || duration_minutes::text FROM bookings WHERE notes = 'E2E auth booking test' ORDER BY created_at DESC LIMIT 1`
+    )
+    expect(status).toBe('online|50')
   })
 })

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { loginAs } from './_auth'
+import { dbQuery } from './_db'
 
 test.describe('Auth - Counselor Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -34,11 +35,10 @@ test.describe('Auth - Counselor Dashboard', () => {
     await expect(page.getByRole('button', { name: '保存' })).toBeVisible()
   })
 
-  test('AC-DCO04: 待機中 Radio + Checkbox + Input + 保存 → 「保存しました」表示 (API 成功時)', async ({ page }) => {
+  test('AC-DCO04: 待機中 Radio + Checkbox + Input + 保存 → 「保存しました」表示 + DB 反映', async ({ page }) => {
     await page.goto('/dashboard/counselor/availability')
     // 待機中 Radio をクリック
     await page.getByLabel('待機中', { exact: false }).click().catch(async () => {
-      // ラベルが label でない場合 input radio を直接クリック
       await page.locator('input[type="radio"][value="machiuke"]').click()
     })
     // Checkbox オン
@@ -46,15 +46,19 @@ test.describe('Auth - Counselor Dashboard', () => {
     if (!(await checkbox.isChecked())) {
       await checkbox.click()
     }
-    // Input に整数
+    // Input に分単価 ¥500
     const priceInput = page.locator('input[type="number"]').first()
     if (await priceInput.isVisible()) {
       await priceInput.fill('500')
     }
     // 保存
     await page.getByRole('button', { name: '保存' }).click()
-    // 「保存しました」 (API 成功 or エラーいずれか出ればよい — 500 系でなければ OK)
-    const result = page.getByText(/保存しました|エラー|失敗/)
-    await expect(result.first()).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('保存しました')).toBeVisible({ timeout: 10000 })
+
+    // DB に反映されているか直接検証
+    const row = dbQuery(
+      `SELECT availability_mode || '|' || on_demand_enabled || '|' || COALESCE(price_per_minute::text,'NULL') FROM counselors WHERE id = 'e2ec0000-0000-0000-0000-000000000001'`
+    )
+    expect(row).toBe('machiuke|true|500')
   })
 })

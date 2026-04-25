@@ -310,6 +310,62 @@ PLAYWRIGHT_BASE_URL=http://localhost:4000 bunx playwright test e2e/auth-*.spec.t
 | E2E テスト | **296/296** (chromium + mobile webkit) ✅ |
 | Lighthouse perf | Landing 2.8s / `/counselors` 2.6s ✅ |
 
+---
+
+## Phase 20 (8th cycle) admin サブページ + DB 検証 + CI 統合 — 2026-04-25
+
+### スコープ
+Phase 19 で AC 100% 自動テスト網羅を達成したが、`fb8db0a` (LP 動的化) と `62a2d15` (管理画面実装) で追加された **13 admin サブページ** が仕様書に未定義 + e2e 未テスト。
+本サイクルで AC 定義・e2e 化・DB 直接検証・CI 統合を一括消化。
+
+### 修正一覧
+
+| # | ファイル | 内容 |
+|---|---|---|
+| F32 | `docs/optimized_spec.md` §3.13.1 (新規) | AC-DAS01〜AC-DAS13 を追加 (admin 13 サブページの h1 + 主要識別要素) |
+| F33 | `e2e/auth-admin-pages.spec.ts` (新規) | AC-DAS01〜13 + non-admin access control 計 15 テスト |
+| F34 | `e2e/_db.ts` (新規) | `dbQuery(sql)` / `dbCount(sql)` ヘルパー (docker exec psql 経由) |
+| F35 | `e2e/auth-counselor-dashboard.spec.ts` AC-DCO04 | 「保存しました」確認後、`counselors` テーブルの availability_mode/on_demand_enabled/price_per_minute を直接 SELECT して反映確認 |
+| F36 | `e2e/auth-booking.spec.ts` AC-B06-Auth | Success Card 確認後、`bookings` テーブルに client_id + counselor_id + notes が新規挿入されているか直接検証 |
+| F37 | `playwright.config.ts` | retries 2, workers=2 (dev mode contention 軽減), expect timeout 10s, navigationTimeout 30s, actionTimeout 15s, webServer は CI で pnpm / local で bun |
+| F38 | `.github/workflows/ci.yml` | 既存 lint/typecheck/test ジョブに加えて新規 `e2e` ジョブ (Supabase CLI セットアップ → db reset → .env.local 生成 → Playwright chromium+webkit 実行 → 失敗時 report upload) |
+
+### 検証結果
+
+| 項目 | Phase 19 | Phase 20 |
+|---|---|---|
+| **e2e** | 296 / 0 failed | **326 / 0 failed** ✅ (+30 tests) |
+| chromium | 148 / 0 | 163 / 0 |
+| mobile (webkit) | 148 / 0 | 163 / 0 |
+| `bunx tsc --noEmit` | 0 errors | 0 errors ✅ |
+| `bun run lint` | 0 errors | 0 errors ✅ |
+| `bun run test` (vitest) | 114 passed | 114 passed ✅ |
+| **CI 統合** | 未統合 | ✅ `.github/workflows/ci.yml` に e2e ジョブ追加 |
+| **DB 直接検証** | 未実装 | ✅ AC-DCO04, AC-B06-Auth で実 DB レコード検査 |
+
+### admin サブページ AC カバレッジ追加 (13 件)
+
+| AC | パス | カバー内容 |
+|---|---|---|
+| AC-DAS01 | `/dashboard/admin/users` | h1 + 適用 Btn or 詳細 link |
+| AC-DAS02 | `/dashboard/admin/counselors` | h1 + 承認済/未承認 Badge |
+| AC-DAS03 | `/dashboard/admin/bookings` | h1 + 詳細 link |
+| AC-DAS04 | `/dashboard/admin/columns` | h1 + 新規作成 link |
+| AC-DAS05 | `/dashboard/admin/announcements` | h1 + 新規お知らせ + 一覧 |
+| AC-DAS06 | `/dashboard/admin/reports` | h1 (empty 許容) |
+| AC-DAS07 | `/dashboard/admin/reviews` | h1 + 表示中/非表示 Badge |
+| AC-DAS08 | `/dashboard/admin/seo` | h1 + 新規ページ SEO 追加 + 登録済みページ |
+| AC-DAS09 | `/dashboard/admin/audit` | h1 (empty 許容) |
+| AC-DAS10 | `/dashboard/admin/health` | h1 + 環境チェック + テーブル件数 |
+| AC-DAS11 | `/dashboard/admin/landing` | h1 + セクション追加 / 公開履歴 |
+| AC-DAS12 | `/dashboard/admin/settings` | h1 + Gemini Banana Pro |
+| AC-DAS13 | `/dashboard/admin/images` | h1 (empty 許容) |
+| (追加) access control | client / counselor が admin/* にアクセス → 非表示 / リダイレクト | 2 テスト |
+
+### Loop Count
+
+`Loop Count: 8` (Phase 19 → 20)
+
 ## 修正概要
 
 Supabase 環境変数（`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`）未設定時に、`/booking/[id]` で固着、`/dashboard/*` で 500 エラーが発生していた問題を解消。
