@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Star, MessageCircle } from "lucide-react"
-import { formatPrice } from "@/lib/utils"
-import type { Counselor, Profile } from "@/types/database"
+import { formatPrice, cn } from "@/lib/utils"
+import { concernBySlug } from "@/lib/taxonomy"
+import type { Counselor, Profile, AvailabilityMode } from "@/types/database"
 
 const levelLabels: Record<string, string> = {
-  starter: "スターター",
+  starter: "新人",
   regular: "レギュラー",
   senior: "シニア",
   master: "マスター",
@@ -25,11 +26,50 @@ interface CounselorCardProps {
   counselor: Counselor & { profiles?: Profile }
 }
 
+function AvailabilityBadge({ mode }: { mode?: AvailabilityMode }) {
+  if (!mode) return null
+
+  if (mode === "machiuke") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+        </span>
+        待機中
+      </span>
+    )
+  }
+
+  if (mode === "accepting_bookings") {
+    return (
+      <span className="inline-flex items-center rounded-full border border-emerald-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+        予約受付中
+      </span>
+    )
+  }
+
+  if (mode === "offline") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-500">
+        オフライン
+      </span>
+    )
+  }
+
+  return null
+}
+
 export function CounselorCard({ counselor }: CounselorCardProps) {
   const name = counselor.profiles?.display_name || counselor.profiles?.full_name || "カウンセラー"
+  const showPerMinute = counselor.on_demand_enabled === true && counselor.price_per_minute
+  const concernSlugs = (counselor.concerns || []).slice(0, 3)
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className={cn("hover:shadow-md transition-shadow relative")}>
+      <div className="absolute top-3 right-3 z-10">
+        <AvailabilityBadge mode={counselor.availability_mode} />
+      </div>
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar
@@ -68,12 +108,37 @@ export function CounselorCard({ counselor }: CounselorCardProps) {
                 ))}
               </div>
             )}
+            {concernSlugs.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {concernSlugs.map((slug) => {
+                  const concern = concernBySlug(slug)
+                  if (!concern) return null
+                  return (
+                    <Badge key={slug} variant="outline" className="text-xs border-gray-200">
+                      {concern.label}
+                    </Badge>
+                  )
+                })}
+              </div>
+            )}
           </div>
           <div className="text-right shrink-0">
-            <p className="text-lg font-bold text-emerald-600">
-              {formatPrice(counselor.hourly_rate)}
-            </p>
-            <p className="text-xs text-gray-400">/ 50分</p>
+            {showPerMinute ? (
+              <>
+                <p className="text-lg font-bold text-emerald-600">
+                  ¥{counselor.price_per_minute}
+                  <span className="text-sm font-semibold">/分</span>
+                </p>
+                <p className="text-xs text-gray-400">+ 予約可</p>
+              </>
+            ) : (
+              <>
+                <p className="text-lg font-bold text-emerald-600">
+                  {formatPrice(counselor.hourly_rate)}
+                </p>
+                <p className="text-xs text-gray-400">/ 50分</p>
+              </>
+            )}
             <Link href={`/counselors/${counselor.id}`} className="mt-3 block">
               <Button size="sm">詳細を見る</Button>
             </Link>

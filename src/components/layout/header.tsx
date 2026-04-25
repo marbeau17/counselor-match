@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Menu, X, Heart } from "lucide-react"
+import { Menu, X, Heart, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface HeaderProps {
@@ -11,31 +11,129 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [toolsOpen, setToolsOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-gray-700 dark:bg-gray-900/95 dark:supports-[backdrop-filter]:bg-gray-900/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
               <Heart className="h-7 w-7 text-emerald-600" />
-              <span className="text-xl font-bold text-gray-900">カウンセラーマッチ</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-gray-100">カウンセラーマッチ</span>
             </Link>
           </div>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/counselors" className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors">
-              カウンセラーを探す
+            <Link href="/counselors" className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors dark:text-gray-300 dark:hover:text-emerald-400">
+              カウンセラー
             </Link>
-            <Link href="/about" className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors">
+
+            {/* 無料診断 dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setToolsOpen(true)}
+              onMouseLeave={() => setToolsOpen(false)}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors dark:text-gray-300 dark:hover:text-emerald-400"
+                onClick={() => setToolsOpen(!toolsOpen)}
+                aria-haspopup="true"
+                aria-expanded={toolsOpen}
+              >
+                無料診断
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              {toolsOpen && (
+                <div className="absolute left-0 top-full pt-2 w-56">
+                  <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
+                    <Link
+                      href="/tools/personality"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                      onClick={() => setToolsOpen(false)}
+                    >
+                      パーソナリティ診断
+                    </Link>
+                    <Link
+                      href="/tools/tarot"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                      onClick={() => setToolsOpen(false)}
+                    >
+                      タロット内省
+                    </Link>
+                    <Link
+                      href="/tools/compatibility"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                      onClick={() => setToolsOpen(false)}
+                    >
+                      相性診断
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Link href="/column" className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors dark:text-gray-300 dark:hover:text-emerald-400">
+              コラム
+            </Link>
+            <Link href="/about" className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors dark:text-gray-300 dark:hover:text-emerald-400">
               私たちについて
             </Link>
+            <Link href="/about/screening" className="text-xs font-medium text-gray-500 hover:text-emerald-600 transition-colors">
+              選考基準
+            </Link>
+
             {user ? (
-              <div className="flex items-center gap-4">
-                <Link href="/dashboard">
-                  <Button variant="outline" size="sm">ダッシュボード</Button>
-                </Link>
+              <div
+                className="relative"
+                onMouseEnter={() => setUserMenuOpen(true)}
+                onMouseLeave={() => setUserMenuOpen(false)}
+              >
+                <button
+                  type="button"
+                  className="flex items-center gap-1"
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  aria-haspopup="true"
+                  aria-expanded={userMenuOpen}
+                >
+                  <Button variant="outline" size="sm">
+                    <span className="flex items-center gap-1">
+                      ダッシュボード
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </Button>
+                </button>
+                {userMenuOpen && (
+                  <div className="absolute right-0 top-full pt-2 w-48">
+                    <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
+                      <Link
+                        href="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        ダッシュボード
+                      </Link>
+                      <Link
+                        href="/dashboard/journey"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        わたしの旅路
+                      </Link>
+                      <Link
+                        href="/dashboard/wallet"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        ウォレット
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-3">
@@ -65,15 +163,55 @@ export function Header({ user }: HeaderProps) {
         <div className="md:hidden border-t border-gray-200 bg-white">
           <div className="space-y-1 px-4 py-4">
             <Link href="/counselors" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
-              カウンセラーを探す
+              カウンセラー
+            </Link>
+
+            {/* 無料診断 collapsible */}
+            <button
+              type="button"
+              className="flex w-full items-center justify-between py-2 text-base font-medium text-gray-600 hover:text-emerald-600"
+              onClick={() => setMobileToolsOpen(!mobileToolsOpen)}
+              aria-expanded={mobileToolsOpen}
+            >
+              <span>無料診断</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${mobileToolsOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileToolsOpen && (
+              <div className="pl-4 space-y-1">
+                <Link href="/tools/personality" className="block py-2 text-sm text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  パーソナリティ診断
+                </Link>
+                <Link href="/tools/tarot" className="block py-2 text-sm text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  タロット内省
+                </Link>
+                <Link href="/tools/compatibility" className="block py-2 text-sm text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  相性診断
+                </Link>
+              </div>
+            )}
+
+            <Link href="/column" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+              コラム
             </Link>
             <Link href="/about" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
               私たちについて
             </Link>
+            <Link href="/about/screening" className="block py-2 text-sm font-medium text-gray-500 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+              選考基準
+            </Link>
+
             {user ? (
-              <Link href="/dashboard" className="block py-2 text-base font-medium text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
-                ダッシュボード
-              </Link>
+              <div className="space-y-1 pt-2 border-t border-gray-100 mt-2">
+                <Link href="/dashboard" className="block py-2 text-base font-medium text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  ダッシュボード
+                </Link>
+                <Link href="/dashboard/journey" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  わたしの旅路
+                </Link>
+                <Link href="/dashboard/wallet" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  ウォレット
+                </Link>
+              </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2">
                 <Link href="/login" onClick={() => setMobileMenuOpen(false)}>

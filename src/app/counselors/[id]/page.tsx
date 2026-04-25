@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Star, MessageCircle, Video, Phone, CheckCircle } from "lucide-react"
+import { Star, MessageCircle, Video, Phone, CheckCircle, Zap } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
 import { mockCounselors, mockReviews } from "@/lib/mock-data"
+import { ReviewCard } from "@/components/counselor/review-card"
 import type { Metadata } from "next"
 
 const levelLabels: Record<string, string> = {
@@ -42,17 +43,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params
   let data: any = null
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    try {
-      const supabase = await createClient()
+  try {
+    const supabase = await createClient()
+    if (supabase) {
       const { data: d } = await supabase
         .from("counselors")
         .select("*, profiles(*)")
         .eq("id", id)
         .single()
       data = d
-    } catch {}
-  }
+    }
+  } catch {}
 
   if (!data) data = findMockCounselor(id)
 
@@ -68,9 +69,9 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
   let counselor: any = null
   let reviews: any[] | null = null
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    try {
-      const supabase = await createClient()
+  try {
+    const supabase = await createClient()
+    if (supabase) {
       const { data } = await supabase
         .from("counselors")
         .select("*, profiles(*)")
@@ -88,8 +89,8 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
           .limit(10)
         reviews = revData
       }
-    } catch {}
-  }
+    }
+  } catch {}
 
   if (!counselor) {
     counselor = findMockCounselor(id)
@@ -211,6 +212,34 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
               </CardContent>
             </Card>
           )}
+
+          {/* 相談者の声 - Axes-enhanced review cards */}
+          {reviews && reviews.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>相談者の声</CardTitle>
+                <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                  当たる、の先へ。洞察・共感・実用性・話しやすさ・気づきの5軸で可視化しています。
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {reviews.map((review: any) => (
+                  <ReviewCard
+                    key={`axes-${review.id}`}
+                    review={{
+                      ...review,
+                      axes: review.axes ?? [],
+                      reply: review.reply ?? null,
+                      reviewer_name:
+                        review.client?.display_name ||
+                        review.client?.full_name ||
+                        undefined,
+                    }}
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar - booking */}
@@ -225,6 +254,14 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                   <p className="text-3xl font-bold text-emerald-600">{formatPrice(counselor.hourly_rate)}</p>
                   <p className="text-sm text-gray-400">/ 50分セッション</p>
                 </div>
+                {counselor.price_per_minute && counselor.on_demand_enabled && (
+                  <div className="rounded-md bg-emerald-50 border border-emerald-100 px-3 py-2">
+                    <p className="text-sm font-semibold text-emerald-700">
+                      ¥{counselor.price_per_minute}/分{" "}
+                      <span className="text-xs font-normal text-emerald-600">(待機中価格)</span>
+                    </p>
+                  </div>
+                )}
                 <Separator />
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">対応形式</p>
@@ -241,6 +278,14 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                   </div>
                 </div>
                 <Separator />
+                {counselor.availability_mode === "machiuke" && (
+                  <div className="flex justify-center">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">
+                      <Zap className="h-3 w-3" />
+                      今すぐ通話可能
+                    </span>
+                  </div>
+                )}
                 <Link href={`/booking/${counselor.id}`}>
                   <Button className="w-full" size="lg">予約に進む</Button>
                 </Link>

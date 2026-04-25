@@ -8,6 +8,18 @@ export type PaymentStatus = 'pending' | 'paid' | 'refunded' | 'failed'
 
 export type SessionType = 'online' | 'chat' | 'phone'
 
+export type AvailabilityMode = 'offline' | 'accepting_bookings' | 'machiuke'
+
+export type ScreeningStatus = 'pending' | 'approved' | 'suspended'
+
+export type GrowthStage = 'shoshin' | 'shinka' | 'musubi'
+
+export type WalletTxType = 'topup' | 'session_charge' | 'signup_bonus' | 'referral_bonus' | 'refund'
+
+export type ReviewAxis = 'insight' | 'empathy' | 'practicality' | 'approachability' | 'awareness'
+
+export type ColumnCategory = 'founder' | 'seo' | 'counselor' | 'testimonial'
+
 export interface Profile {
   id: string
   email: string
@@ -18,6 +30,11 @@ export interface Profile {
   phone: string | null
   created_at: string
   updated_at: string
+  birth_date?: string | null
+  line_user_id?: string | null
+  referral_code?: string | null
+  referred_by?: string | null
+  growth_stage?: GrowthStage
 }
 
 export interface Counselor {
@@ -40,6 +57,12 @@ export interface Counselor {
   commission_rate: number
   created_at: string
   updated_at: string
+  concerns?: string[]
+  price_per_minute?: number | null
+  availability_mode?: AvailabilityMode
+  on_demand_enabled?: boolean
+  screening_status?: ScreeningStatus
+  intro_video_url?: string | null
 }
 
 export interface Booking {
@@ -81,6 +104,8 @@ export interface Review {
   comment: string | null
   is_anonymous: boolean
   created_at: string
+  axes?: ReviewAxisScore[]
+  reply?: CounselorReply | null
 }
 
 export interface Category {
@@ -90,4 +115,60 @@ export interface Category {
   description: string | null
   icon: string | null
   sort_order: number
+}
+
+export interface Wallet {
+  id: string
+  user_id: string
+  balance_yen: number
+  created_at: string
+  updated_at: string
+}
+
+export interface WalletTransaction {
+  id: string
+  wallet_id: string
+  type: WalletTxType
+  amount_yen: number
+  related_booking_id?: string | null
+  expires_at?: string | null
+  note?: string | null
+  created_at: string
+}
+
+export interface ReviewAxisScore {
+  id: string
+  review_id: string
+  axis: ReviewAxis
+  score: number
+}
+
+export interface CounselorReply {
+  id: string
+  review_id: string
+  counselor_id: string
+  body: string
+  created_at: string
+  updated_at: string
+}
+
+export interface JournalEntry {
+  id: string
+  user_id: string
+  booking_id?: string | null
+  body: string
+  created_at: string
+}
+
+export interface ContentColumn {
+  id: string
+  slug: string
+  title: string
+  body: string
+  excerpt?: string | null
+  author_id?: string | null
+  category: ColumnCategory
+  published_at?: string | null
+  created_at: string
+  updated_at: string
 }

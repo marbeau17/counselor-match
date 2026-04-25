@@ -1,66 +1,126 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Heart, Shield, Users, Star, Sparkles, ArrowRight, CheckCircle } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import {
+  Heart,
+  Compass,
+  Sparkles,
+  BookHeart,
+  Shield,
+  ArrowRight,
+  Search,
+  UserCheck,
+  CalendarCheck,
+  NotebookPen,
+} from "lucide-react"
+import { groupMethodologies } from "@/lib/taxonomy"
 
 export default function HomePage() {
+  const groups = groupMethodologies()
+
+  const features = [
+    {
+      icon: Heart,
+      title: "ホリスティック心理学",
+      desc: "身体・心・感情・魂の4層から本質に向き合う。",
+    },
+    {
+      icon: Compass,
+      title: "Soul Mirror Law",
+      desc: "関係性を鏡に、内側の真実を観る独自メソッド。",
+    },
+    {
+      icon: Shield,
+      title: "守られた対話",
+      desc: "厳選カウンセラー・多軸レビュー・満足保証。",
+    },
+  ]
+
+  const steps = [
+    { icon: Search, title: "悩みとアプローチで探す", desc: "テーマと方法論からあなたに合う伴走者を絞り込みます。" },
+    { icon: UserCheck, title: "プロフィール・レビューを確認", desc: "背景・専門・受け手の声を多角的に確かめます。" },
+    { icon: CalendarCheck, title: "セッションを予約", desc: "オンライン・チャット・電話から選べます。" },
+    { icon: NotebookPen, title: "振り返りジャーナルで統合", desc: "気づきを記録し、日々の内省として根づかせます。" },
+  ]
+
+  const tools = [
+    {
+      href: "/tools/personality",
+      icon: BookHeart,
+      title: "パーソナリティ診断",
+      desc: "32タイプの性格構造から、今の自分の在り方を内省する。",
+    },
+    {
+      href: "/tools/tarot",
+      icon: Sparkles,
+      title: "タロット・リフレクション",
+      desc: "カードを通じて、いま向き合うべきテーマを見つめ直す。",
+    },
+    {
+      href: "/tools/compatibility",
+      icon: Heart,
+      title: "関係性リフレクション",
+      desc: "大切な人との関係を、魂の鏡として静かに観察する。",
+    },
+  ]
+
+  const familyLabels: Record<"holistic" | "spiritual" | "divination", string> = {
+    holistic: "ホリスティック",
+    spiritual: "スピリチュアル",
+    divination: "占術",
+  }
+
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700 mb-6">
               <Sparkles className="h-4 w-4" />
-              ホリスティック心理学 × テクノロジー
+              Holistic × Spiritual Counseling
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 tracking-tight">
-              あなたに寄り添う
-              <br />
-              <span className="text-emerald-600">カウンセラー</span>を見つけよう
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+              占いを超えた、
+              <br className="sm:hidden" />
+              <span className="text-emerald-600">魂のためのホリスティックカウンセリング</span>
             </h1>
             <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-              心・体・精神の統合的アプローチで、あなたに最適なカウンセラーをマッチング。
-              オンラインで気軽に、本質的な癒しと成長をサポートします。
+              心理学とスピリチュアルの統合で、本当の自分に還る場所。
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/counselors">
                 <Button size="lg" className="w-full sm:w-auto">
                   カウンセラーを探す
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
               </Link>
-              <Link href="/about">
+              <Link href="/tools/personality">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  詳しく見る
+                  無料診断を試す
                 </Button>
               </Link>
             </div>
+            <p className="mt-6 text-xs text-gray-500">
+              厳選されたカウンセラーによる、4層統合（身体・心・感情・魂）のアプローチ
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features */}
       <section className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">選ばれる理由</h2>
-            <p className="mt-3 text-gray-500">カウンセラーマッチが提供する3つの価値</p>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature cards with icons */}
-            {[
-              { icon: Heart, title: "ホリスティックアプローチ", desc: "身体・心・精神・魂の4層モデルに基づく統合的なカウンセリングで、表面的な問題だけでなく根本的な癒しを提供します。" },
-              { icon: Users, title: "AIマッチング", desc: "独自のパーソナリティマトリクス32により、1,024通りのパターンからあなたに最適なカウンセラーを提案します。" },
-              { icon: Shield, title: "安心・安全", desc: "全カウンセラーは厳正な審査を通過。SSL暗号化通信とプライバシー保護で、安心してご利用いただけます。" },
-            ].map((feature, i) => (
+            {features.map((f, i) => (
               <Card key={i} className="text-center p-6 hover:shadow-md transition-shadow">
                 <CardContent className="pt-6">
                   <div className="mx-auto w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-emerald-600" />
+                    <f.icon className="h-6 w-6 text-emerald-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{f.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -68,44 +128,100 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 bg-gray-50">
+      {/* Methodologies strip */}
+      <section className="py-14 bg-gray-50 border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">ご利用の流れ</h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900">Our Methodologies</h2>
+            <p className="mt-2 text-sm text-gray-500">3つの知の系譜を、ひとつの対話に統合します。</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { step: "01", title: "無料登録", desc: "メールアドレスまたはSNSアカウントで簡単登録" },
-              { step: "02", title: "診断・マッチング", desc: "簡単な質問に答えて、あなたに合うカウンセラーを提案" },
-              { step: "03", title: "予約", desc: "カレンダーから都合の良い日時を選んで予約" },
-              { step: "04", title: "セッション", desc: "オンラインで安心してカウンセリングを受けられます" },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="text-4xl font-bold text-emerald-200 mb-3">{item.step}</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-500">{item.desc}</p>
+          <div className="space-y-4">
+            {(Object.keys(groups) as Array<keyof typeof groups>).map((key) => (
+              <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider w-32 shrink-0">
+                  {familyLabels[key]}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {groups[key].map((m) => (
+                    <Badge key={m.slug} variant="secondary" className="font-normal">
+                      {m.label}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* How it works */}
+      <section className="py-20 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900">ご利用の流れ</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {steps.map((s, i) => (
+              <div key={i} className="text-center">
+                <div className="mx-auto w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center mb-3">
+                  <s.icon className="h-5 w-5 text-emerald-600" />
+                </div>
+                <div className="text-xs text-emerald-600 font-semibold mb-1">STEP {String(i + 1).padStart(2, "0")}</div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Free tools */}
+      <section className="py-20 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-gray-900">無料で試せるリフレクションツール</h2>
+            <p className="mt-3 text-sm text-gray-500">占いではなく、自分自身と対話するためのきっかけを。</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {tools.map((t, i) => (
+              <Link key={i} href={t.href} className="block group">
+                <Card className="h-full p-6 hover:shadow-md transition-shadow">
+                  <CardContent className="pt-4">
+                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+                      <t.icon className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-2 group-hover:text-emerald-700">
+                      {t.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{t.desc}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
       <section className="py-20 bg-emerald-600">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            あなたの一歩を、ここから。
-          </h2>
+          <h2 className="text-3xl font-bold text-white mb-4">今すぐ、魂との対話をはじめる</h2>
           <p className="text-emerald-100 mb-8 max-w-2xl mx-auto">
-            まずは無料登録から。あなたに合ったカウンセラーとの出会いが、新しい自分への第一歩です。
+            本当の自分に還るための、静かな一歩を。
           </p>
-          <Link href="/register">
-            <Button size="lg" variant="outline" className="bg-white text-emerald-600 hover:bg-emerald-50 border-white">
-              無料で始める
-              <ArrowRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/register">
+              <Button size="lg" variant="outline" className="bg-white text-emerald-600 hover:bg-emerald-50 border-white w-full sm:w-auto">
+                今すぐ、魂との対話をはじめる
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+            <Link href="/tools/personality">
+              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-emerald-700 w-full sm:w-auto">
+                まずは無料パーソナリティ診断
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </>

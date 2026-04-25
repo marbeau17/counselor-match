@@ -27,20 +27,28 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   let user = null
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    try {
-      const supabase = await createClient()
+  try {
+    const supabase = await createClient()
+    if (supabase) {
       const { data } = await supabase.auth.getUser()
       user = data.user
-    } catch {
-      // Supabase not configured yet
     }
+  } catch {
+    // Supabase 未設定または通信エラーは匿名ユーザー扱い
   }
 
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
+      <head>
+        {/* OS のダーク設定 or localStorage("theme") を読み、初回描画前に <html class="dark"> を確定 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100`}
       >
         <div className="flex min-h-screen flex-col">
           <Header
