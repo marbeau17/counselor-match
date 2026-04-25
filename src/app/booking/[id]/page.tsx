@@ -50,30 +50,34 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
     async function load() {
       const supabase = createClient()
 
-      // Check auth
-      const { data: { user: currentUser } } = await supabase.auth.getUser()
-      setUser(currentUser)
+      // Supabase 未設定時はモックフォールバックのみで描画
+      if (supabase) {
+        try {
+          const { data: { user: currentUser } } = await supabase.auth.getUser()
+          setUser(currentUser)
 
-      // Try Supabase first, fallback to mock
-      if (currentUser) {
-        const { data } = await supabase
-          .from("counselors")
-          .select("*, profiles(*)")
-          .eq("id", id)
-          .eq("is_active", true)
-          .single()
+          if (currentUser) {
+            const { data } = await supabase
+              .from("counselors")
+              .select("*, profiles(*)")
+              .eq("id", id)
+              .eq("is_active", true)
+              .single()
 
-        if (data) {
-          setCounselor(data)
-          if (data.available_session_types?.length > 0) {
-            setSessionType(data.available_session_types[0])
+            if (data) {
+              setCounselor(data)
+              if (data.available_session_types?.length > 0) {
+                setSessionType(data.available_session_types[0])
+              }
+              setLoading(false)
+              return
+            }
           }
-          setLoading(false)
-          return
+        } catch {
+          // Supabase エラー時もモックフォールバックへ続行
         }
       }
 
-      // Fallback to mock data
       const mock = mockCounselors.find((c) => c.id === id)
       if (mock) {
         setCounselor(mock)

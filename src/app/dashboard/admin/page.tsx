@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/utils"
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
+  if (!supabase) redirect("/login")
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 

@@ -31,7 +31,12 @@ export default function RegisterPage() {
     }
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({
+    if (!supabase) {
+      setError("認証サービスが利用できません。管理者にお問い合わせください。")
+      setLoading(false)
+      return
+    }
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -44,6 +49,14 @@ export default function RegisterPage() {
       setError("登録に失敗しました。もう一度お試しください。")
       setLoading(false)
       return
+    }
+
+    if (data?.session) {
+      try {
+        fetch("/api/wallet/signup-bonus", { method: "POST" }).catch(() => {})
+      } catch {
+        // ignore
+      }
     }
 
     setSuccess(true)
@@ -59,6 +72,11 @@ export default function RegisterPage() {
               {email} にメールを送信しました。メール内のリンクをクリックして、登録を完了してください。
             </CardDescription>
           </CardHeader>
+          <CardContent>
+            <div className="rounded-md bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-800">
+              登録完了で ¥3,000 のウェルカム・ポイントがウォレットに付与されます（14日間有効）。
+            </div>
+          </CardContent>
           <CardFooter className="justify-center">
             <Link href="/login">
               <Button variant="outline">ログインページへ</Button>
@@ -132,6 +150,10 @@ export default function RegisterPage() {
           </div>
           <Button variant="outline" className="w-full" onClick={async () => {
             const supabase = createClient()
+            if (!supabase) {
+              setError("認証サービスが利用できません。管理者にお問い合わせください。")
+              return
+            }
             await supabase.auth.signInWithOAuth({
               provider: "google",
               options: { redirectTo: `${window.location.origin}/auth/callback` },

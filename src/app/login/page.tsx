@@ -23,6 +23,11 @@ export default function LoginPage() {
     setError(null)
 
     const supabase = createClient()
+    if (!supabase) {
+      setError("認証サービスが利用できません。管理者にお問い合わせください。")
+      setLoading(false)
+      return
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
@@ -37,6 +42,10 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     const supabase = createClient()
+    if (!supabase) {
+      setError("認証サービスが利用できません。管理者にお問い合わせください。")
+      return
+    }
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },

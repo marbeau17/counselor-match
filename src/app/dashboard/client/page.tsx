@@ -23,6 +23,7 @@ const statusVariants: Record<string, "default" | "secondary" | "warning" | "dest
 
 export default async function ClientDashboardPage() {
   const supabase = await createClient()
+  if (!supabase) redirect("/login")
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
