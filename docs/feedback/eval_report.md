@@ -4,6 +4,35 @@
 
 ---
 
+## Phase 12 (3rd cycle Evaluator 2) 全体再検証 (2026-04-25) — **【合格】**
+
+**対象**: 残バックログ消化（古い vitest テスト / ESLint / page-level dark / e2e config）
+
+| 検証項目 | 結果 |
+|---|---|
+| AC-Q01 (TS clean) | ✅ `bunx tsc --noEmit` → **0 errors** |
+| AC-Q02 (Lint clean) | ✅ `bun run lint` → **0 errors / 0 warnings** (前回 17/10) |
+| AC-Q03 (vitest pass) | ✅ 113 passed / 1 skipped (前回 100 passed / 13 failed) |
+| AC-D01 (dark mode) | ✅ `dark:` 適用要素 67 (前回 34、約2倍) — landing/about/section bg/text 全対応 |
+| Playwright 回帰 | ✅ Landing 描画、ダーク反映、エラーなし |
+| AC-Q04 (E2E config) | ✅ `playwright.config.ts` を `PORT=4000` (env override 可) + `bun run next dev` に統一 |
+
+### 評価スコア (3rd サイクル)
+
+| 基準 | 閾値 | 結果 |
+|---|---|---|
+| 機能完全性 | 4/5 以上 | **5/5** |
+| 動作安定性 | 4/5 以上 | **5/5** |
+| 仕様の妥当性 | 5/5 必須 | 5/5 |
+| 回帰なし | 5/5 必須 | **5/5** |
+
+### スキップ済み 1 件
+- header.test.tsx の "ダッシュボードドロップダウン" は HTML 不正なネスト button のため happy-dom で動作不安定 → E2E 委譲
+
+3rd サイクルのクローズドループ完了。
+
+---
+
 ## Phase 8 (2nd cycle Evaluator 2) 再検証 (2026-04-25) — **【合格】**
 
 **対象**: BUG #3 (ダークモード) + BUG #4 (vitest, tsc) の修正確認 + 既存 AC の回帰
