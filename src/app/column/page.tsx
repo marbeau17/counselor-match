@@ -10,7 +10,13 @@ import type { ColumnCategory } from '@/types/database'
 export const metadata = {
   title: 'コラム・マガジン',
   description:
-    'ホリスティック心理学、Soul Mirror Law、相談者の声。カウンセラーマッチの公式コラム。',
+    'ホリスティック心理学、Soul Mirror Law、相談者の声。カウンセラーマッチの公式マガジン。読み物として、内省のヒントとして。',
+  alternates: { canonical: 'https://counselors.aicreonext.com/column' },
+  openGraph: {
+    title: 'コラム・マガジン | カウンセラーマッチ',
+    description: 'ホリスティック心理学、内省のための読み物、相談者の声。',
+    url: 'https://counselors.aicreonext.com/column',
+  },
 }
 
 type FilterValue = 'all' | ColumnCategory

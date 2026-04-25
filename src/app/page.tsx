@@ -1,8 +1,23 @@
+import type { Metadata } from "next"
 import { fetchPublishedSections, fetchDraftSections } from "@/lib/landing"
 import { verifyPreviewToken } from "@/lib/preview-token"
 import { SectionRenderer } from "@/components/landing/section-renderer"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "心と関係を整える、伴走型のスピリチュアル・カウンセリング",
+  description:
+    "急かされない場所で、誰かに、ゆっくり聞いてほしい。ホリスティック心理学に根ざした伴走型のオンラインカウンセリング。厳選カウンセラーと、対話を通じた静かな自己理解を。",
+  alternates: { canonical: "https://counselors.aicreonext.com/" },
+  openGraph: {
+    type: "website",
+    title: "心と関係を整える、伴走型のスピリチュアル・カウンセリング",
+    description:
+      "急かされない場所で、ゆっくり聴いてくれる人と出会う。日本語で受けられる、ホリスティック心理学のオンラインカウンセリング。",
+    url: "https://counselors.aicreonext.com/",
+  },
+}
 
 export default async function HomePage({
   searchParams,

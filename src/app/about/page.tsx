@@ -5,8 +5,15 @@ import { Layers, Sparkles, Users, BookOpen, ArrowRight } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "私たちについて | カウンセラーマッチ",
-  description: "カウンセラーマッチは、ホリスティック心理学に基づくオンラインカウンセリングマッチングプラットフォームです。",
+  title: "私たちについて",
+  description:
+    "カウンセラーマッチは、ホリスティック心理学に基づく日本のオンラインカウンセリング・マッチングサービス。Body / Mind / Heart / Spirit の 4 層から、本質的な対話と統合をサポート。",
+  alternates: { canonical: "https://counselors.aicreonext.com/about" },
+  openGraph: {
+    title: "私たちについて | カウンセラーマッチ",
+    description: "ホリスティック心理学 × Soul Mirror Law。4 層の自己理解を支える伴走者。",
+    url: "https://counselors.aicreonext.com/about",
+  },
 }
 
 export default function AboutPage() {

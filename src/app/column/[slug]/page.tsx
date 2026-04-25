@@ -131,6 +131,28 @@ export default async function ColumnDetailPage({
           ))}
         </div>
 
+        {/* 本文末の CTA: カウンセラーと話してみる (cross-link 強化) */}
+        <aside className="mt-16 p-8 sm:p-10 bg-base dark:bg-gray-900 rounded-tl-3xl rounded-br-3xl border border-accent-quiet/60 dark:border-gray-800 text-center">
+          <p className="font-accent italic text-sm text-accent-primary mb-2">— Take the next step</p>
+          <p className="font-serif text-lg sm:text-xl text-primary dark:text-gray-100 mb-5 leading-relaxed">
+            この記事のテーマを、誰かに話してみませんか。
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center text-sm">
+            <Link
+              href="/counselors"
+              className="inline-flex items-center px-5 py-2.5 rounded-full bg-accent-warm hover:bg-accent-primary text-white transition-colors"
+            >
+              静かに話せる人を探す
+            </Link>
+            <Link
+              href="/tools/personality"
+              className="inline-flex items-center px-5 py-2.5 rounded-full border border-accent-primary/40 text-accent-primary hover:bg-accent-quiet transition-colors"
+            >
+              まず無料で診断する
+            </Link>
+          </div>
+        </aside>
+
         {related.length > 0 && (
           <footer className="mt-20 pt-10 border-t border-gray-100 dark:border-gray-800">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">

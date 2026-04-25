@@ -399,7 +399,16 @@ export function TestimonialsSection({ props }: { props: AnyProps }) {
                 {it.comment}
               </blockquote>
               <figcaption className="flex items-center gap-3 pt-5 border-t border-accent-quiet/60 dark:border-gray-800">
-                <Avatar src={it.avatar_url} alt={it.name ?? ""} size="md" />
+                {it.avatar_url ? (
+                  <Avatar src={it.avatar_url} alt={it.name ?? ""} size="md" />
+                ) : (
+                  <div
+                    className="flex items-center justify-center h-10 w-10 rounded-full bg-accent-quiet text-accent-primary font-accent text-sm tracking-wider"
+                    aria-hidden
+                  >
+                    {(it.name ?? "").replace(/\s*さん$/, "").slice(0, 3) || "—"}
+                  </div>
+                )}
                 <div>
                   <p className="text-sm font-medium text-primary dark:text-gray-100">{it.name}</p>
                   <p className="text-xs text-muted dark:text-gray-500">{it.role}</p>
