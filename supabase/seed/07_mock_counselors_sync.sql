@@ -1,23 +1,64 @@
 -- =============================================================================
--- Mock counselor IDs を Supabase に同期 (v2: 既存と衝突する場合は cleanup)
+-- Mock counselor IDs を Supabase に同期 (v3: payments FK 対応)
 --
 -- src/lib/mock-data.ts で固定された 6 名の counselor を Supabase に upsert する。
 -- これで /counselors → /counselors/[id] → /booking/[id] → 予約成立 まで mock ID で完走可能になる。
 --
--- v2 変更点:
--- - counselors.user_id の UNIQUE 制約衝突を回避するため、既存の mock メール
---   アドレスを持つ profiles + 関連 counselors を先に削除
--- - profiles の DELETE は CASCADE で auth.users と counselors を巻き込み消去
--- - 既存の bookings/payments/reviews も CASCADE で消える（新規環境前提、テストデータのみのため許容）
+-- v3 変更点:
+-- - payments → counselors の FK に CASCADE が無いため、関連データを順次削除
+-- - 削除順序: payments → bookings → reviews → counselors → profiles → auth.users
+-- - 新規環境のテストデータのみのため、関連データ全削除は許容
 -- =============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- -----------------------------------------------------------------------------
--- Step 0: 既存の mock メールアドレスを持つレコードを cleanup
+-- Step 0: 既存 mock email + 関連レコードを順次 cleanup
 -- -----------------------------------------------------------------------------
--- profiles を削除 → CASCADE で counselors も削除（FK ON DELETE CASCADE 想定）
--- ただし auth.users → profiles の方向の CASCADE なので、auth.users から削除する
+
+-- 0a. payments（mock counselor id 経由）
+DELETE FROM payments WHERE counselor_id IN (
+  SELECT c.id FROM counselors c
+  JOIN auth.users u ON u.id = c.user_id
+  WHERE u.email IN (
+    'misaki.tanaka@example.com', 'kenta.suzuki@example.com',
+    'akari.yamamoto@example.com', 'ryuichi.sato@example.com',
+    'ayaka.nakamura@example.com', 'yamato.ito@example.com'
+  )
+);
+
+-- 0b. reviews（mock counselor id 経由）
+DELETE FROM reviews WHERE counselor_id IN (
+  SELECT c.id FROM counselors c
+  JOIN auth.users u ON u.id = c.user_id
+  WHERE u.email IN (
+    'misaki.tanaka@example.com', 'kenta.suzuki@example.com',
+    'akari.yamamoto@example.com', 'ryuichi.sato@example.com',
+    'ayaka.nakamura@example.com', 'yamato.ito@example.com'
+  )
+);
+
+-- 0c. bookings（mock counselor id 経由）
+DELETE FROM bookings WHERE counselor_id IN (
+  SELECT c.id FROM counselors c
+  JOIN auth.users u ON u.id = c.user_id
+  WHERE u.email IN (
+    'misaki.tanaka@example.com', 'kenta.suzuki@example.com',
+    'akari.yamamoto@example.com', 'ryuichi.sato@example.com',
+    'ayaka.nakamura@example.com', 'yamato.ito@example.com'
+  )
+);
+
+-- 0d. counselors（user_id が mock email の profile を指すもの）
+DELETE FROM counselors WHERE user_id IN (
+  SELECT id FROM auth.users WHERE email IN (
+    'misaki.tanaka@example.com', 'kenta.suzuki@example.com',
+    'akari.yamamoto@example.com', 'ryuichi.sato@example.com',
+    'ayaka.nakamura@example.com', 'yamato.ito@example.com'
+  )
+);
+
+-- 0e. auth.users（CASCADE で profiles も削除される）
 DELETE FROM auth.users WHERE email IN (
   'misaki.tanaka@example.com',
   'kenta.suzuki@example.com',
