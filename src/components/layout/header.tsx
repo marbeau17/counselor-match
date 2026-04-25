@@ -96,20 +96,17 @@ export function Header({ user }: HeaderProps) {
                 onMouseEnter={() => setUserMenuOpen(true)}
                 onMouseLeave={() => setUserMenuOpen(false)}
               >
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   type="button"
-                  className="flex items-center gap-1"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
                 >
-                  <Button variant="outline" size="sm">
-                    <span className="flex items-center gap-1">
-                      ダッシュボード
-                      <ChevronDown className="h-4 w-4" />
-                    </span>
-                  </Button>
-                </button>
+                  ダッシュボード
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
                 {userMenuOpen && (
                   <div className="absolute right-0 top-full pt-2 w-56">
                     <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">

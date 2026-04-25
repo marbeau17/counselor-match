@@ -36,17 +36,16 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    !request.nextUrl.pathname.startsWith('/register') &&
-    request.nextUrl.pathname !== '/' &&
-    !request.nextUrl.pathname.startsWith('/counselors') &&
-    !request.nextUrl.pathname.startsWith('/about') &&
-    !request.nextUrl.pathname.startsWith('/booking')
-  ) {
+  // 認証が必要な領域（dashboard / 認証済み API）のみ保護。それ以外は全て public。
+  const pathname = request.nextUrl.pathname
+  const isProtected =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/session') ||
+    pathname.startsWith('/api/admin') ||
+    pathname.startsWith('/api/counselor') ||
+    pathname.startsWith('/api/wallet')
+
+  if (isProtected && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)

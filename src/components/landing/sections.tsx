@@ -151,7 +151,7 @@ export function HowItWorksSection({ props }: { props: AnyProps }) {
                   <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" />
                 </div>
               )}
-              <div className="text-emerald-600 font-bold text-sm">STEP {it.step ?? i + 1}</div>
+              <div className="text-emerald-600 font-bold text-sm">STEP {String(it.step ?? i + 1).padStart(2, "0")}</div>
               <h3 className="mt-2 text-base font-semibold text-gray-900 dark:text-gray-100">{it.title}</h3>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{it.body}</p>
             </div>

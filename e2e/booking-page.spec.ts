@@ -60,7 +60,8 @@ test.describe('Booking Page', () => {
   })
 
   test('displays price in sidebar', async ({ page }) => {
-    await expect(page.getByText('￥12,000')).toBeVisible()
+    // WebKit と Chromium の Intl.NumberFormat で通貨記号が ¥ と ￥ のいずれか
+    await expect(page.getByText(/[¥￥]12,000/).first()).toBeVisible()
     await expect(page.getByText('50分')).toBeVisible()
   })
 
@@ -140,11 +141,11 @@ test.describe('Booking Page - Full Navigation Flow', () => {
     // 鈴木健太
     await page.goto('/booking/c0000000-0000-0000-0000-000000000002')
     await expect(page.getByText('鈴木健太').first()).toBeVisible()
-    await expect(page.getByText('￥9,000')).toBeVisible()
+    await expect(page.getByText(/[¥￥]9,000/).first()).toBeVisible()
 
     // 中村彩花
     await page.goto('/booking/c0000000-0000-0000-0000-000000000005')
     await expect(page.getByText('中村彩花').first()).toBeVisible()
-    await expect(page.getByText('￥5,000')).toBeVisible()
+    await expect(page.getByText(/[¥￥]5,000/).first()).toBeVisible()
   })
 })

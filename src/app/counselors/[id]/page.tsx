@@ -13,7 +13,7 @@ import { ReviewCard } from "@/components/counselor/review-card"
 import type { Metadata } from "next"
 
 const levelLabels: Record<string, string> = {
-  starter: "スターター",
+  starter: "新人",
   regular: "レギュラー",
   senior: "シニア",
   master: "マスター",

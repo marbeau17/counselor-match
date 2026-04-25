@@ -29,9 +29,11 @@ test.describe('Booking Flow - Counselor Selection (Cart)', () => {
   test('counselor cards show specialties badges', async ({ page }) => {
     await page.goto('/counselors')
 
-    await expect(page.getByText('ホリスティック心理学').first()).toBeVisible()
-    await expect(page.getByText('キャリアカウンセリング').first()).toBeVisible()
-    await expect(page.getByText('家族療法').first()).toBeVisible()
+    // モバイル幅では aside (フィルタ) が hidden だが DOM には残るため、card 領域に限定して検索
+    const cards = page.locator('aside ~ div')
+    await expect(cards.getByText('ホリスティック心理学').first()).toBeVisible()
+    await expect(cards.getByText('キャリアカウンセリング').first()).toBeVisible()
+    await expect(cards.getByText('家族療法').first()).toBeVisible()
   })
 
   test('counselor cards show level badges', async ({ page }) => {
@@ -40,16 +42,16 @@ test.describe('Booking Flow - Counselor Selection (Cart)', () => {
     await expect(page.getByText('マスター').first()).toBeVisible()
     await expect(page.getByText('シニア').first()).toBeVisible()
     await expect(page.getByText('レギュラー').first()).toBeVisible()
-    // 新規 tier 「新人」（旧名 スターター）
-    await expect(page.getByText(/新人|スターター/).first()).toBeVisible()
+    await expect(page.getByText('新人').first()).toBeVisible()
   })
 
   test('counselor cards have "詳細を見る" button', async ({ page }) => {
     await page.goto('/counselors')
 
+    // mock 6 名 + e2e seed counselor で 7 になる場合があるため、最低 6 で判定
     const detailButtons = page.getByRole('link', { name: '詳細を見る' })
     const count = await detailButtons.count()
-    expect(count).toBe(6)
+    expect(count).toBeGreaterThanOrEqual(6)
   })
 
   test('clicking "詳細を見る" navigates to counselor detail', async ({ page }) => {
@@ -102,8 +104,8 @@ test.describe('Booking Flow - Counselor Detail Page', () => {
 
   test('displays reviews section with mock reviews', async ({ page }) => {
     await expect(page.getByText('レビュー').first()).toBeVisible()
-    // 田中美咲 のレビュー本文の特徴的な部分でマッチ（reviewer 名は anonymous の場合あり）
-    await expect(page.getByText('田中先生のホリスティックなアプローチ').first()).toBeVisible()
+    // 田中美咲 のレビューが mock または DB seed どちらでも「田中先生」を含むことを期待
+    await expect(page.getByText(/田中先生/).first()).toBeVisible()
   })
 
   test('displays star ratings in reviews', async ({ page }) => {
@@ -153,8 +155,8 @@ test.describe('Booking Flow - Different Counselors', () => {
     await page.goto('/counselors/c0000000-0000-0000-0000-000000000005')
 
     await expect(page.locator('h1', { hasText: '中村彩花' })).toBeVisible()
-    await expect(page.getByText('スターター').first()).toBeVisible()
-    await expect(page.getByText('￥5,000')).toBeVisible()
+    await expect(page.getByText('新人').first()).toBeVisible()
+    await expect(page.getByText(/[¥￥]5,000/).first()).toBeVisible()
     await expect(page.getByText('予約に進む')).toBeVisible()
   })
 
@@ -198,6 +200,12 @@ test.describe('Booking Flow - End-to-End Navigation', () => {
 
   test('counselor filter sidebar is visible', async ({ page }) => {
     await page.goto('/counselors')
+
+    // モバイル幅 (lg 未満) では aside の内容は hidden になり、Btn「フィルター」で展開する仕様 (AC-C07)
+    const filterToggle = page.getByRole('button', { name: /^フィルター/ })
+    if (await filterToggle.isVisible()) {
+      await filterToggle.click()
+    }
 
     const sidebar = page.locator('aside')
 

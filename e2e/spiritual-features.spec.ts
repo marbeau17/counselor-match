@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { openMobileMenuIfNeeded, openCounselorFiltersIfNeeded } from './_helpers'
 
 test.describe('Landing — new brand positioning', () => {
   test('page title reflects spiritual/holistic positioning', async ({ page }) => {
@@ -8,16 +9,26 @@ test.describe('Landing — new brand positioning', () => {
 
   test('hero heading contains new positioning copy', async ({ page }) => {
     await page.goto('/')
+    // 新コピー (fb8db0a の LP 動的化以降): "心と関係を整える、伴走型のスピリチュアル・カウンセリング"
+    // 旧コピー: "占いを超えた」「魂のための"
     const heading = page
-      .getByRole('heading', { name: /占いを超えた/ })
+      .getByRole('heading', { name: /スピリチュアル|伴走/ })
+      .or(page.getByRole('heading', { name: /占いを超えた/ }))
       .or(page.getByRole('heading', { name: /魂のための/ }))
     await expect(heading.first()).toBeVisible()
   })
 
   test('links to /counselors and /tools/personality are visible', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('a[href="/counselors"]').first()).toBeVisible()
-    await expect(page.locator('a[href="/tools/personality"]').first()).toBeVisible()
+    await openMobileMenuIfNeeded(page)
+    // モバイルではモバイル診断メニューを展開する必要あり (collapsed by default)
+    const mobileToolsBtn = page.getByRole('button', { name: /^無料診断/, expanded: false }).first()
+    if (await mobileToolsBtn.isVisible()) {
+      await mobileToolsBtn.click()
+    }
+    // 同じ href の link が複数 (デスクトップ nav + モバイルメニュー + CTA) ある可能性。可視のものに限定
+    await expect(page.locator('a[href="/counselors"]:visible').first()).toBeVisible()
+    await expect(page.locator('a[href="/tools/personality"]:visible').first()).toBeVisible()
   })
 
   test('renders at least one methodology label', async ({ page }) => {
@@ -33,6 +44,7 @@ test.describe('Landing — new brand positioning', () => {
 test.describe('Counselors list — dual-axis filters', () => {
   test('shows concern filter header', async ({ page }) => {
     await page.goto('/counselors')
+    await openCounselorFiltersIfNeeded(page)
     const header = page
       .getByText('悩みで絞り込む', { exact: false })
       .or(page.getByRole('heading', { name: /絞り込む/ }))
@@ -41,6 +53,7 @@ test.describe('Counselors list — dual-axis filters', () => {
 
   test('shows at least one concern checkbox label', async ({ page }) => {
     await page.goto('/counselors')
+    await openCounselorFiltersIfNeeded(page)
     const concern = page
       .getByText('恋愛', { exact: false })
       .or(page.getByText('仕事', { exact: false }))
@@ -50,6 +63,7 @@ test.describe('Counselors list — dual-axis filters', () => {
 
   test('shows at least one methodology filter label', async ({ page }) => {
     await page.goto('/counselors')
+    await openCounselorFiltersIfNeeded(page)
     const methodology = page
       .getByText('タロット', { exact: false })
       .or(page.getByText('Soul Mirror Law', { exact: false }))
@@ -58,12 +72,15 @@ test.describe('Counselors list — dual-axis filters', () => {
 
   test('clicking a concern checkbox does not crash the grid', async ({ page }) => {
     await page.goto('/counselors')
+    await openCounselorFiltersIfNeeded(page)
     const concernLabel = page
       .locator('label', { hasText: '恋愛' })
       .or(page.locator('label', { hasText: '仕事' }))
       .or(page.locator('label', { hasText: '家族' }))
       .first()
-    await concernLabel.scrollIntoViewIfNeeded()
+    // DOM 安定化を待つ (DB-driven re-render の race を回避)
+    await concernLabel.waitFor({ state: 'attached' })
+    await concernLabel.scrollIntoViewIfNeeded().catch(() => {})
     await concernLabel.click({ force: true }).catch(() => {})
     // Page still responsive; heading remains
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
@@ -109,7 +126,8 @@ test.describe('Free tools', () => {
     await page.goto('/tools/tarot')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/タロット/)
     await page.locator('textarea').fill('自分を知るために必要なことは何か')
-    await page.getByRole('button', { name: /カードを引く|引く|診断/ }).first().click()
+    // ヘッダーの「無料診断」ドロップダウンと衝突するため、フォームスコープで厳密に「カードを引く」のみを対象にする
+    await page.getByRole('main').getByRole('button', { name: 'カードを引く' }).click()
     const cardName = page
       .getByText('愚者', { exact: false })
       .or(page.getByText('魔術師', { exact: false }))

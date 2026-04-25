@@ -91,8 +91,8 @@ NEXTAUTH_SECRET="e2e-dev-secret-for-testing-only-please-change" NEXTAUTH_URL="ht
 
 ### 3.1 Landing (`/`)
 
-**AC-L01**: `h1` に「占いを超えた、」「魂のためのホリスティックカウンセリング」の両方のテキストが含まれる。
-**AC-L02**: Badge テキスト「Holistic × Spiritual Counseling」が表示される。
+**AC-L01**: `h1` に「心と関係を整える、伴走型のスピリチュアル・カウンセリング」が含まれる。（fb8db0a の LP 動的化以降、HeroSection の seed copy として確定。`landing_sections` テーブルの `home/hero` published_props.headline が同一値）
+**AC-L02**: 信頼バー (`trust_bar` セクション) に「厳選審査済み」「多軸レビュー」「守秘義務」「満足保証」の 4 ラベルが表示される。
 **AC-L03**: Button「カウンセラーを探す」クリックで `/counselors` へ遷移する。
 **AC-L04**: Button「無料診断を試す」クリックで `/tools/personality` へ遷移する。
 **AC-L05**: 「ホリスティック心理学」「Soul Mirror Law」「守られた対話」の 3 枚の Card が表示される。
@@ -120,7 +120,7 @@ NEXTAUTH_SECRET="e2e-dev-secret-for-testing-only-please-change" NEXTAUTH_URL="ht
 
 ### 3.4 Counselor 詳細 (`/counselors/[id]`)
 
-**AC-CD01**: 有効な ID で訪問した場合、アバター、氏名、階層 Badge（「スターター」「レギュラー」「シニア」「マスター」のいずれか）、title が表示される。
+**AC-CD01**: 有効な ID で訪問した場合、アバター、氏名、階層 Badge（「新人」「レギュラー」「シニア」「マスター」のいずれか）、title が表示される。
 **AC-CD02**: Bio、Specialties、Certifications の 3 セクションが表示される。
 **AC-CD03**: Reviews セクションに星評価とコメントが少なくとも 1 件表示される。
 **AC-CD04**: 「相談者の声」セクションに 5 軸（insight, empathy, practicality, approachability, awareness）のスコア表示が存在する（data available case）。

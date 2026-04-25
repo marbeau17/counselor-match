@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Header } from '../header'
 
@@ -85,10 +85,18 @@ describe('Header', () => {
     expect(hrefs).toContain('/register')
   })
 
-  // ダッシュボード遷移リンクはホバー/クリックで開くドロップダウン内にあり、
-  // テスト環境（happy-dom）でのネストボタン挙動が不安定なため E2E に委譲。
-  // ボタン本体のレンダリングは "shows dashboard button when user is logged in" テストでカバー。
-  it.skip('has correct href link for dashboard when logged in (covered by E2E)', () => {})
+  it('has correct href link for dashboard when logged in', () => {
+    render(<Header user={{ email: 'test@test.com', full_name: 'Test User' }} />)
+    // ドロップダウン親 div の onMouseEnter で展開
+    const triggerButton = screen.getAllByRole('button', { name: /ダッシュボード/ })[0]
+    const dropdownContainer = triggerButton.closest('div.relative')!
+    fireEvent.mouseEnter(dropdownContainer)
+    // ドロップダウン内に /dashboard へのリンクが現れる
+    const dashboardLinks = screen
+      .getAllByRole('link')
+      .filter((l) => l.getAttribute('href') === '/dashboard')
+    expect(dashboardLinks.length).toBeGreaterThanOrEqual(1)
+  })
 
   it('toggles mobile menu when menu button is clicked', async () => {
     const user = userEvent.setup()
