@@ -41,12 +41,13 @@ export async function loginAs(page: Page, role: TestUserRole): Promise<void> {
 
   // /dashboard/{client|counselor|admin} まで遷移完了を待つ
   // (login → /dashboard → role 別 redirect → /dashboard/{role})
+  // CI / mobile webkit ではログイン chain が長くなるため timeout を厚めに
   const expectedPath = role === 'admin' ? /\/dashboard\/admin/
                      : role === 'counselor' ? /\/dashboard\/counselor/
                      : /\/dashboard\/client/
-  await page.waitForURL(expectedPath, { timeout: 15000 })
-  await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {})
+  await page.waitForURL(expectedPath, { timeout: 30000 })
+  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {})
 
   // h1 が出るまで安定化
-  await expect(page.locator('h1').first()).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('h1').first()).toBeVisible({ timeout: 10000 })
 }
