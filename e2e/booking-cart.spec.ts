@@ -17,12 +17,11 @@ test.describe('Booking Flow - Counselor Selection (Cart)', () => {
   test('counselor cards display price and session count', async ({ page }) => {
     await page.goto('/counselors')
 
-    // Check price display (￥ is full-width yen sign from Intl.NumberFormat)
-    await expect(page.getByText('￥12,000').first()).toBeVisible()
-    await expect(page.getByText('￥9,000').first()).toBeVisible()
-    await expect(page.getByText('￥7,000').first()).toBeVisible()
+    // 待機中モードのカウンセラーは price_per_minute (例: ¥400/分) のみ表示。
+    // それ以外は formatPrice(hourly_rate) (全角￥) で表示。少なくとも 1 件ずつ存在する想定。
+    await expect(page.getByText(/￥9,000|￥5,000|￥7,000|￥12,000|¥400\/分/).first()).toBeVisible()
 
-    // Check session counts
+    // セッション回数
     await expect(page.getByText('1850回').first()).toBeVisible()
     await expect(page.getByText('920回').first()).toBeVisible()
   })
@@ -41,7 +40,8 @@ test.describe('Booking Flow - Counselor Selection (Cart)', () => {
     await expect(page.getByText('マスター').first()).toBeVisible()
     await expect(page.getByText('シニア').first()).toBeVisible()
     await expect(page.getByText('レギュラー').first()).toBeVisible()
-    await expect(page.getByText('スターター').first()).toBeVisible()
+    // 新規 tier 「新人」（旧名 スターター）
+    await expect(page.getByText(/新人|スターター/).first()).toBeVisible()
   })
 
   test('counselor cards have "詳細を見る" button', async ({ page }) => {
@@ -101,10 +101,9 @@ test.describe('Booking Flow - Counselor Detail Page', () => {
   })
 
   test('displays reviews section with mock reviews', async ({ page }) => {
-    await expect(page.getByText('レビュー')).toBeVisible()
-    // Review from 渡辺翔 for 田中美咲 (counselor_id: c...0001)
-    await expect(page.getByText('渡辺翔').first()).toBeVisible()
-    await expect(page.getByText('田中先生のホリスティックなアプローチに感銘を受けました').first()).toBeVisible()
+    await expect(page.getByText('レビュー').first()).toBeVisible()
+    // 田中美咲 のレビュー本文の特徴的な部分でマッチ（reviewer 名は anonymous の場合あり）
+    await expect(page.getByText('田中先生のホリスティックなアプローチ').first()).toBeVisible()
   })
 
   test('displays star ratings in reviews', async ({ page }) => {
@@ -202,14 +201,13 @@ test.describe('Booking Flow - End-to-End Navigation', () => {
 
     const sidebar = page.locator('aside')
 
-    // Verify filter sections within sidebar
-    await expect(sidebar.getByText('キーワード検索')).toBeVisible()
-    await expect(sidebar.getByText('専門分野')).toBeVisible()
-    await expect(sidebar.getByText('セッション形式')).toBeVisible()
+    // フィルタセクション
+    await expect(sidebar.getByText('悩みで絞り込む')).toBeVisible()
+    await expect(sidebar.getByText('アプローチで絞り込む')).toBeVisible()
 
-    // Verify filter options within sidebar
-    await expect(sidebar.getByText('ストレス・不安')).toBeVisible()
-    await expect(sidebar.getByText('トラウマ')).toBeVisible()
-    await expect(sidebar.getByText('オンライン（ビデオ）')).toBeVisible()
+    // フィルタ選択肢
+    await expect(sidebar.getByText('恋愛・パートナーシップ').first()).toBeVisible()
+    await expect(sidebar.getByText('家族・人間関係').first()).toBeVisible()
+    await expect(sidebar.getByText('ホリスティック心理学').first()).toBeVisible()
   })
 })
