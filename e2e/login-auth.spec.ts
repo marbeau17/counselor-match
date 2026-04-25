@@ -31,7 +31,11 @@ test.describe('Login Authentication', () => {
     const emailInput = page.getByLabel('メールアドレス')
     const passwordInput = page.getByLabel('パスワード')
 
+    // WebKit で fill が反映されないことがあるため、focus + waitFor で安定化
+    await emailInput.waitFor({ state: 'visible' })
+    await emailInput.click()
     await emailInput.fill('test@example.com')
+    await passwordInput.click()
     await passwordInput.fill('password123')
 
     await expect(emailInput).toHaveValue('test@example.com')
