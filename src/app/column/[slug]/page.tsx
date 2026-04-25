@@ -64,8 +64,29 @@ export default async function ColumnDetailPage({
 
   const paragraphs = column.body.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || ""
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: column.title,
+    description: column.excerpt ?? undefined,
+    datePublished: column.published_at ?? undefined,
+    dateModified: column.updated_at ?? column.published_at ?? undefined,
+    url: `${baseUrl}/column/${column.slug}`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${baseUrl}/column/${column.slug}` },
+    publisher: {
+      "@type": "Organization",
+      name: "カウンセラーマッチ",
+      url: baseUrl,
+    },
+  }
+
   return (
     <article className="py-16 bg-white dark:bg-gray-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link

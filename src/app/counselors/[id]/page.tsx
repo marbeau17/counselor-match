@@ -92,6 +92,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
           .from("reviews")
           .select("*, client:profiles!reviews_client_id_fkey(display_name, full_name)")
           .eq("counselor_id", id)
+          .eq("is_hidden", false)
           .order("created_at", { ascending: false })
           .limit(10)
         reviews = revData
@@ -108,8 +109,40 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
 
   const name = counselor.profiles?.display_name || counselor.profiles?.full_name || "カウンセラー"
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || ""
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    description: counselor.bio?.slice(0, 500),
+    image: counselor.profiles?.avatar_url || undefined,
+    url: `${baseUrl}/counselors/${id}`,
+    jobTitle: counselor.title || "カウンセラー",
+  }
+  if (counselor.rating_count > 0) {
+    jsonLd.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: Number(counselor.rating_average ?? 0).toFixed(2),
+      reviewCount: counselor.rating_count,
+      bestRating: 5,
+      worstRating: 1,
+    }
+  }
+  if (reviews && reviews.length > 0) {
+    jsonLd.review = reviews.slice(0, 5).map((r) => ({
+      "@type": "Review",
+      reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 },
+      author: { "@type": "Person", name: r.is_anonymous ? "匿名" : (r.client?.display_name || r.client?.full_name || "ユーザー") },
+      reviewBody: r.comment ?? undefined,
+    }))
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main content */}
         <div className="lg:col-span-2 space-y-6">

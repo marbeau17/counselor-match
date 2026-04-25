@@ -20,11 +20,13 @@ export default async function AdminDashboardPage() {
   const nowMs = new Date().getTime()
   const dayAgo = new Date(nowMs - 24 * 60 * 60 * 1000).toISOString()
   const monthAgo = new Date(nowMs - 30 * 24 * 60 * 60 * 1000).toISOString()
+  const sevenDaysAgo = new Date(nowMs - 7 * 24 * 60 * 60 * 1000).toISOString()
 
   const [
     usersCount, counselorsCount, bookingsCount, paymentsResp,
     monthBookings, dauCount, mauCount, ratingResp,
     recentBookings, recentUsers,
+    weekBookings, weekUsers,
   ] = await Promise.all([
     supabase.from("profiles").select("*", { count: "exact", head: true }),
     supabase.from("counselors").select("*", { count: "exact", head: true }).eq("is_active", true),
@@ -36,7 +38,27 @@ export default async function AdminDashboardPage() {
     supabase.from("reviews").select("rating"),
     supabase.from("bookings").select("id, status, scheduled_at, price, counselor:counselors(profiles(display_name, full_name)), client:profiles!bookings_client_id_fkey(display_name, full_name)").order("created_at", { ascending: false }).limit(5),
     supabase.from("profiles").select("id, email, full_name, display_name, role, created_at").order("created_at", { ascending: false }).limit(5),
+    supabase.from("bookings").select("created_at").gte("created_at", sevenDaysAgo),
+    supabase.from("profiles").select("created_at").gte("created_at", sevenDaysAgo),
   ])
+
+  // 7 日間の日次集計
+  const dayKey = (iso: string) => iso.slice(0, 10)
+  const days: { date: string; bookings: number; users: number }[] = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(nowMs - i * 24 * 60 * 60 * 1000)
+    const k = d.toISOString().slice(0, 10)
+    days.push({ date: k, bookings: 0, users: 0 })
+  }
+  for (const b of (weekBookings.data ?? []) as { created_at: string }[]) {
+    const d = days.find((x) => x.date === dayKey(b.created_at))
+    if (d) d.bookings++
+  }
+  for (const u of (weekUsers.data ?? []) as { created_at: string }[]) {
+    const d = days.find((x) => x.date === dayKey(u.created_at))
+    if (d) d.users++
+  }
+  const maxValue = Math.max(1, ...days.flatMap((d) => [d.bookings, d.users]))
 
   const totalRevenue = (paymentsResp.data ?? []).reduce((s: number, p: { platform_fee?: number }) => s + (p.platform_fee ?? 0), 0)
   const monthRevenue = (paymentsResp.data ?? [])
@@ -88,6 +110,36 @@ export default async function AdminDashboardPage() {
         <KpiCard icon={MailOpen} color="purple" value={dauCount.count ?? 0} label="DAU (24h)" />
         <KpiCard icon={Activity} color="blue" value={mauCount.count ?? 0} label="MAU (30d)" />
       </div>
+
+      {/* 7 日アクティビティ */}
+      <Card className="mb-6">
+        <CardHeader><CardTitle>直近 7 日のアクティビティ</CardTitle></CardHeader>
+        <CardContent>
+          <div className="flex items-end gap-2 h-40">
+            {days.map((d) => (
+              <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
+                <div className="w-full flex items-end gap-1 h-32">
+                  <div
+                    className="flex-1 bg-emerald-500 rounded-t transition-all"
+                    style={{ height: `${(d.bookings / maxValue) * 100}%` }}
+                    title={`予約 ${d.bookings} 件`}
+                  />
+                  <div
+                    className="flex-1 bg-blue-500 rounded-t transition-all"
+                    style={{ height: `${(d.users / maxValue) * 100}%` }}
+                    title={`新規 ${d.users} 件`}
+                  />
+                </div>
+                <span className="text-[10px] text-gray-500">{d.date.slice(5)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex gap-4 text-xs">
+            <span className="flex items-center gap-1"><span className="w-3 h-3 bg-emerald-500 rounded" />予約</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 bg-blue-500 rounded" />新規ユーザー</span>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* 平均レビュー */}
       <Card className="mb-8">
