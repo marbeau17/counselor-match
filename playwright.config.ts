@@ -9,6 +9,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   // CI で auth chain が長く各 retry が高コストのため 1 回に削減
   retries: 1,
+  // 認証テスト用 storage state を事前生成
+  globalSetup: './e2e/global-setup.ts',
   // dev mode の HMR + Supabase 経由の DB クエリで並列負荷に弱いため worker を 1 に固定
   // (ローカル / CI 共通。安定性 > 速度)
   workers: 1,
