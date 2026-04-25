@@ -76,7 +76,7 @@ export default function ForCounselorsPage() {
               ))}
             </ul>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-6">
-              詳細は <Link href="/about/screening" className="text-emerald-600 dark:text-emerald-400 hover:underline">選考プロセス</Link> をご覧ください。
+              詳細は <Link href="/about/screening" className="text-emerald-700 dark:text-emerald-300 underline">選考プロセス</Link> をご覧ください。
             </p>
           </CardContent>
         </Card>

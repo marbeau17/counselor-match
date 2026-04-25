@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [chromium, mobile]
+        project: [chromium, firefox, mobile]
 
     steps:
       - name: Checkout
@@ -91,8 +91,17 @@ jobs:
             echo "NEXTAUTH_URL=http://localhost:4000"
           } > .env.local
 
+      - name: Determine browser
+        id: browser
+        run: |
+          case "${{ matrix.project }}" in
+            chromium) echo "name=chromium" >> $GITHUB_OUTPUT ;;
+            firefox)  echo "name=firefox"  >> $GITHUB_OUTPUT ;;
+            mobile)   echo "name=webkit"   >> $GITHUB_OUTPUT ;;
+          esac
+
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps ${{ matrix.project == 'chromium' && 'chromium' || 'webkit' }}
+        run: pnpm exec playwright install --with-deps ${{ steps.browser.outputs.name }}
 
       - name: Run Playwright tests (${{ matrix.project }})
         env:
@@ -107,3 +116,64 @@ jobs:
           name: playwright-report-${{ matrix.project }}
           path: playwright-report
           retention-days: 7
+
+  lighthouse:
+    name: Lighthouse CI (perf / a11y / SEO)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint-typecheck-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase + apply seed
+        run: |
+          supabase start
+          supabase db reset
+
+      - name: Configure .env.local
+        run: |
+          API_URL=$(supabase status -o env | grep '^API_URL=' | cut -d'=' -f2 | tr -d '"')
+          ANON_KEY=$(supabase status -o env | grep '^ANON_KEY=' | cut -d'=' -f2 | tr -d '"')
+          SERVICE_ROLE_KEY=$(supabase status -o env | grep '^SERVICE_ROLE_KEY=' | cut -d'=' -f2 | tr -d '"')
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY"
+            echo "NEXTAUTH_SECRET=ci-secret-for-testing-only-32-chars-min"
+            echo "NEXTAUTH_URL=http://localhost:4000"
+          } > .env.local
+
+      - name: Build Next.js (prod for stable LCP)
+        run: pnpm exec next build
+
+      - name: Start Next.js prod server
+        run: |
+          PORT=4000 pnpm exec next start -p 4000 > /tmp/next.log 2>&1 &
+          until curl -sf http://localhost:4000 -o /dev/null; do sleep 2; done
+          echo "Next.js prod ready"
+
+      - name: Run Lighthouse CI
+        run: pnpm exec lhci autorun --config=./lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
