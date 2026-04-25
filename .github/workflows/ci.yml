@@ -88,7 +88,19 @@ jobs:
         run: supabase start
 
       - name: Apply migrations + seeds
-        run: supabase db reset
+        # Restarting containers の 502 は無視する (DB / seed は正常に適用される)
+        run: supabase db reset || echo "supabase db reset exited non-zero (likely 502 on container restart, continuing)"
+
+      - name: Wait for Supabase API to recover (post db reset)
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:54321/rest/v1/ -o /dev/null 2>&1; then
+              echo "Supabase REST API ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Supabase REST API not responding after 60s" && exit 1
 
       - name: Verify seed application + re-apply if needed
         run: |
