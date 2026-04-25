@@ -1,5 +1,14 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Locator } from '@playwright/test'
 import { openMobileMenuIfNeeded, openCounselorFiltersIfNeeded } from './_helpers'
+
+/** WebKit で fill が反映されない race を回避 */
+async function safeFill(locator: Locator, value: string) {
+  await locator.waitFor({ state: 'visible' })
+  await locator.click()
+  await locator.fill(value)
+  // 入力が反映されたことを確認
+  await expect(locator).toHaveValue(value, { timeout: 5000 })
+}
 
 test.describe('Landing — new brand positioning', () => {
   test('page title reflects spiritual/holistic positioning', async ({ page }) => {
@@ -111,13 +120,13 @@ test.describe('Free tools', () => {
   test('Personality: diagnoses and shows an archetype result', async ({ page }) => {
     await page.goto('/tools/personality')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/パーソナリティ診断/)
-    await page.locator('input[type="date"]').first().fill('1990-05-15')
+    await safeFill(page.locator('input[type="date"]').first(), '1990-05-15')
     await page.getByRole('button', { name: /診断する/ }).click()
     const archetype = page
       .getByText('Seeker', { exact: false })
       .or(page.getByText('Healer', { exact: false }))
       .or(page.getByText('Creator', { exact: false }))
-    await expect(archetype.first()).toBeVisible({ timeout: 10000 })
+    await expect(archetype.first()).toBeVisible({ timeout: 15000 })
     // Ethics: must not use predictive fortune language
     await expect(page.getByText('予言', { exact: true })).not.toBeVisible()
   })
@@ -125,7 +134,7 @@ test.describe('Free tools', () => {
   test('Tarot: draws a card for a reflective question', async ({ page }) => {
     await page.goto('/tools/tarot')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/タロット/)
-    await page.locator('textarea').fill('自分を知るために必要なことは何か')
+    await safeFill(page.locator('textarea'), '自分を知るために必要なことは何か')
     // ヘッダーの「無料診断」ドロップダウンと衝突するため、フォームスコープで厳密に「カードを引く」のみを対象にする
     await page.getByRole('main').getByRole('button', { name: 'カードを引く' }).click()
     const cardName = page
@@ -139,7 +148,7 @@ test.describe('Free tools', () => {
       .or(page.getByText('隠者', { exact: false }))
       .or(page.getByText('運命の輪', { exact: false }))
       .or(page.getByText('節制', { exact: false }))
-    await expect(cardName.first()).toBeVisible({ timeout: 10000 })
+    await expect(cardName.first()).toBeVisible({ timeout: 15000 })
     // Ethics: must not use lucky-fortune language
     await expect(page.getByText('ラッキー', { exact: false })).not.toBeVisible()
   })
@@ -148,12 +157,12 @@ test.describe('Free tools', () => {
     await page.goto('/tools/compatibility')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/相性診断/)
     const dates = page.locator('input[type="date"]')
-    await dates.nth(0).fill('1990-05-15')
-    await dates.nth(1).fill('1992-08-22')
+    await safeFill(dates.nth(0), '1990-05-15')
+    await safeFill(dates.nth(1), '1992-08-22')
     await page.getByRole('button', { name: /診断する/ }).click()
     // Numeric score (2-3 digits)
     const scoreArea = page.locator('body')
-    await expect(scoreArea).toContainText(/\d{2,3}/, { timeout: 10000 })
+    await expect(scoreArea).toContainText(/\d{2,3}/, { timeout: 15000 })
     const label = page
       .getByText('共鳴', { exact: false })
       .or(page.getByText('調和', { exact: false }))
