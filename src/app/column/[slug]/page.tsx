@@ -65,7 +65,7 @@ export default async function ColumnDetailPage({
   const paragraphs = column.body.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
 
   return (
-    <article className="py-16 bg-white">
+    <article className="py-16 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link
@@ -81,18 +81,18 @@ export default async function ColumnDetailPage({
             <Badge variant="secondary" className="font-normal">
               {COLUMN_CATEGORY_LABELS[column.category]}
             </Badge>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-400 dark:text-gray-500">
               {formatDate(column.published_at)}
             </span>
             {column.author_id && (
-              <span className="text-xs text-gray-400">著者: {column.author_id}</span>
+              <span className="text-xs text-gray-400 dark:text-gray-500">著者: {column.author_id}</span>
             )}
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight leading-tight">
             {column.title}
           </h1>
           {column.excerpt && (
-            <p className="mt-4 text-base text-gray-500 leading-relaxed">
+            <p className="mt-4 text-base text-gray-500 dark:text-gray-400 dark:text-gray-500 leading-relaxed">
               {column.excerpt}
             </p>
           )}
@@ -102,7 +102,7 @@ export default async function ColumnDetailPage({
           {paragraphs.map((p, i) => (
             <p
               key={i}
-              className="text-gray-800 leading-[1.9] mb-6"
+              className="text-gray-800 dark:text-gray-200 leading-[1.9] mb-6"
               style={{ whiteSpace: 'pre-wrap' }}
             >
               {p}
@@ -111,8 +111,8 @@ export default async function ColumnDetailPage({
         </div>
 
         {related.length > 0 && (
-          <footer className="mt-20 pt-10 border-t border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">
+          <footer className="mt-20 pt-10 border-t border-gray-100 dark:border-gray-800">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
               関連するコラム
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -128,11 +128,11 @@ export default async function ColumnDetailPage({
                         <Badge variant="secondary" className="font-normal">
                           {COLUMN_CATEGORY_LABELS[r.category]}
                         </Badge>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
                           {formatDate(r.published_at)}
                         </span>
                       </div>
-                      <h3 className="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 leading-snug">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-emerald-700 leading-snug">
                         {r.title}
                       </h3>
                     </CardContent>

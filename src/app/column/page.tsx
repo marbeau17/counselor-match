@@ -54,13 +54,13 @@ export default async function ColumnIndexPage({
     active === 'all' ? all : all.filter((c) => c.category === active)
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <header className="mb-10 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
             コラム・マガジン
           </h1>
-          <p className="mt-3 text-sm text-gray-500">
+          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             ホリスティック心理学とSoul Mirror Lawにまつわる、日々の気づき。
           </p>
         </header>
@@ -78,7 +78,7 @@ export default async function ColumnIndexPage({
                 className={
                   isActive
                     ? 'inline-flex items-center rounded-full bg-emerald-600 text-white px-4 py-1.5 text-sm font-medium'
-                    : 'inline-flex items-center rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 text-sm font-medium'
+                    : 'inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 px-4 py-1.5 text-sm font-medium'
                 }
               >
                 {f.label}
@@ -89,7 +89,7 @@ export default async function ColumnIndexPage({
 
         {columns.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
               該当するコラムはまだありません。別のカテゴリーをお試しください。
             </p>
           </div>
@@ -103,15 +103,15 @@ export default async function ColumnIndexPage({
                       <Badge variant="secondary" className="font-normal">
                         {COLUMN_CATEGORY_LABELS[c.category]}
                       </Badge>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
                         {formatDate(c.published_at)}
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 mb-3 leading-snug">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-emerald-700 mb-3 leading-snug">
                       {c.title}
                     </h2>
                     {c.excerpt && (
-                      <p className="text-sm text-gray-500 leading-relaxed line-clamp-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 leading-relaxed line-clamp-4">
                         {c.excerpt}
                       </p>
                     )}

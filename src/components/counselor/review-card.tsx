@@ -44,22 +44,22 @@ export function ReviewCard({ review }: ReviewCardProps) {
   const rel = formatRelative(review.created_at)
 
   return (
-    <article className="rounded-lg border border-gray-100 bg-white p-4 space-y-3">
+    <article className="rounded-lg border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 space-y-3">
       <header className="flex items-center gap-2 flex-wrap">
         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
           <CheckCircle2 className="h-3 w-3" />
           実相談者レビュー
         </span>
-        <span className="text-sm text-gray-700">{reviewerLabel}</span>
+        <span className="text-sm text-gray-700 dark:text-gray-200">{reviewerLabel}</span>
         {rel && (
-          <span className="text-xs text-gray-400" title={formatDate(review.created_at)}>
+          <span className="text-xs text-gray-400 dark:text-gray-500" title={formatDate(review.created_at)}>
             {rel}
           </span>
         )}
       </header>
 
       {review.comment && (
-        <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+        <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
           {review.comment}
         </p>
       )}
@@ -76,11 +76,11 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <span className="text-xs font-medium text-emerald-700">
               カウンセラーより
             </span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-400 dark:text-gray-500">
               {formatRelative(review.reply.created_at)}
             </span>
           </div>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+          <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
             {review.reply.body}
           </p>
         </div>

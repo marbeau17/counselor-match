@@ -120,13 +120,13 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                 <Avatar src={counselor.profiles?.avatar_url} alt={name} size="xl" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{name}</h1>
                     <Badge>{levelLabels[counselor.level]}</Badge>
                   </div>
                   {counselor.title && (
-                    <p className="text-gray-500 mt-1">{counselor.title}</p>
+                    <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{counselor.title}</p>
                   )}
-                  <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                  <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
                     {counselor.rating_count > 0 && (
                       <span className="flex items-center gap-1">
                         <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
@@ -149,7 +149,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
               <CardTitle>自己紹介</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{counselor.bio}</p>
+              <p className="text-gray-600 dark:text-gray-300 dark:text-gray-600 whitespace-pre-wrap leading-relaxed">{counselor.bio}</p>
             </CardContent>
           </Card>
 
@@ -178,7 +178,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
               <CardContent>
                 <ul className="space-y-2">
                   {counselor.certifications.map((c: string) => (
-                    <li key={c} className="flex items-center gap-2 text-sm text-gray-600">
+                    <li key={c} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600">
                       <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0" />
                       {c}
                     </li>
@@ -206,12 +206,12 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-gray-400">
+                      <span className="text-sm text-gray-400 dark:text-gray-500">
                         {review.is_anonymous ? "匿名" : review.client?.display_name || review.client?.full_name || "利用者"}
                       </span>
                     </div>
                     {review.comment && (
-                      <p className="text-sm text-gray-600">{review.comment}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600">{review.comment}</p>
                     )}
                     <Separator className="mt-4" />
                   </div>
@@ -225,7 +225,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
             <Card>
               <CardHeader>
                 <CardTitle>相談者の声</CardTitle>
-                <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1 leading-relaxed">
                   当たる、の先へ。洞察・共感・実用性・話しやすさ・気づきの5軸で可視化しています。
                 </p>
               </CardHeader>
@@ -259,7 +259,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
               <CardContent className="space-y-4">
                 <div>
                   <p className="text-3xl font-bold text-emerald-600">{formatPrice(counselor.hourly_rate)}</p>
-                  <p className="text-sm text-gray-400">/ 50分セッション</p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500">/ 50分セッション</p>
                 </div>
                 {counselor.price_per_minute && counselor.on_demand_enabled && (
                   <div className="rounded-md bg-emerald-50 border border-emerald-100 px-3 py-2">
@@ -271,7 +271,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                 )}
                 <Separator />
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-2">対応形式</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">対応形式</p>
                   <div className="flex flex-wrap gap-2">
                     {counselor.available_session_types?.map((type: string) => {
                       const Icon = sessionTypeIcons[type] || MessageCircle
@@ -296,7 +296,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                 <Link href={`/booking/${counselor.id}`}>
                   <Button className="w-full" size="lg">予約に進む</Button>
                 </Link>
-                <p className="text-xs text-gray-400 text-center">
+                <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
                   ※ 予約にはログインが必要です
                 </p>
               </CardContent>

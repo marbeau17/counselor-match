@@ -129,13 +129,13 @@ export default function ScreeningPage() {
           <ShieldCheck className="h-4 w-4" />
           透明性ポリシー
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           カウンセラー選考・レベル基準
         </h1>
         <p className="text-lg text-emerald-700 font-medium mb-6">
           「厳選」の実態を、数字で公開します。
         </p>
-        <p className="text-base text-gray-600 leading-relaxed">
+        <p className="text-base text-gray-600 dark:text-gray-300 dark:text-gray-600 leading-relaxed">
           スピリチュアルカウンセリングは、人生の脆弱な瞬間に寄り添う仕事です。だからこそ「厳選しました」という曖昧な言葉ではなく、
           どのゲートを通過した人が、どの実績を積むと、次のレベルに上がるのか——その基準を具体的な数字で開示します。
           これはクライアントの皆さまに選択の根拠を提供し、同時にカウンセラーに明快な成長経路を示すための私たちの約束です。
@@ -146,8 +146,8 @@ export default function ScreeningPage() {
       {/* Section 1: Screening Process */}
       <section className="mb-16">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">1. 選考プロセス</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">1. 選考プロセス</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             すべてのカウンセラーが登録前に通過する6つのゲート。
           </p>
         </div>
@@ -162,9 +162,9 @@ export default function ScreeningPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <step.icon className="h-4 w-4 text-emerald-600" />
-                      <h3 className="text-base font-semibold text-gray-900">{step.title}</h3>
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{step.title}</h3>
                     </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600 leading-relaxed">{step.desc}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -176,8 +176,8 @@ export default function ScreeningPage() {
       {/* Section 2: Tier Criteria */}
       <section className="mb-16">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">2. レベル昇格基準</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">2. レベル昇格基準</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             カウンセラーは実績・評価・倫理遵守によって4段階を昇格します。曖昧な推薦ではなく数値基準です。
           </p>
         </div>
@@ -187,8 +187,8 @@ export default function ScreeningPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{tier.label}</h3>
-                    <p className="text-xs font-mono text-gray-400 mt-0.5">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{tier.label}</h3>
+                    <p className="text-xs font-mono text-gray-400 dark:text-gray-500 mt-0.5">
                       {tier.slug}
                     </p>
                   </div>
@@ -196,7 +196,7 @@ export default function ScreeningPage() {
                 </div>
                 <ul className="space-y-2">
                   {tier.criteria.map((c) => (
-                    <li key={c} className="flex items-start gap-2 text-sm text-gray-700">
+                    <li key={c} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                       <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
                       <span>{c}</span>
                     </li>
@@ -211,8 +211,8 @@ export default function ScreeningPage() {
       {/* Section 3: Safeguards */}
       <section className="mb-16">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">3. セーフガード</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">3. セーフガード</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             選考通過後も、利用者保護のための継続的な仕組みを運用します。
           </p>
         </div>
@@ -222,8 +222,8 @@ export default function ScreeningPage() {
               <CardContent className="p-5 flex items-start gap-4">
                 <AlertTriangle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-1">{s.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{s.desc}</p>
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">{s.title}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600 leading-relaxed">{s.desc}</p>
                 </div>
               </CardContent>
             </Card>
@@ -236,15 +236,15 @@ export default function ScreeningPage() {
         <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-0">
           <CardContent className="p-8 md:p-10">
             <Layers className="h-8 w-8 text-emerald-600 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               4. なぜ、ここまで厳格に審査するのか
             </h2>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-3">
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
               スピリチュアルカウンセリングは、Body（身体）・Mind（思考）・Heart（感情）・Spirit（魂）の4層すべてに触れる営みです。
               この領域は、クライアントが最も無防備になる瞬間を扱います。だからこそ、技術の高さだけでは足りません。
               倫理的な誠実さ——恐怖を煽らないこと、万能感を装わないこと、境界線を守ること——が同等に求められます。
             </p>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-200 leading-relaxed">
               私たちが公開するこの基準は、クライアントの皆さまが安心して自分を委ねられる土台であり、
               また志あるカウンセラーが誇りを持って名乗れる所属の証明でもあります。
               「厳選」を数字で示すこと——それが私たちの4層アプローチの核心です。
@@ -254,9 +254,9 @@ export default function ScreeningPage() {
       </section>
 
       {/* Footer CTA */}
-      <section className="text-center border-t border-gray-200 pt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">次の一歩へ</h2>
-        <p className="text-gray-500 mb-8">
+      <section className="text-center border-t border-gray-200 dark:border-gray-700 pt-12">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">次の一歩へ</h2>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-8">
           基準を知ったあなたへ、二つの入り口をご用意しています。
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

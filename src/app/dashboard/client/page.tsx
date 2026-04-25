@@ -55,10 +55,10 @@ export default async function ClientDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           こんにちは、{profile?.display_name || profile?.full_name || "ゲスト"}さん
         </h1>
-        <p className="text-gray-500 mt-1">マイページ</p>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">マイページ</p>
       </div>
 
       {/* Stats */}
@@ -70,7 +70,7 @@ export default async function ClientDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{upcomingBookings.length}</p>
-              <p className="text-sm text-gray-500">予約中</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">予約中</p>
             </div>
           </CardContent>
         </Card>
@@ -81,7 +81,7 @@ export default async function ClientDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{pastBookings.length}</p>
-              <p className="text-sm text-gray-500">セッション履歴</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">セッション履歴</p>
             </div>
           </CardContent>
         </Card>
@@ -94,7 +94,7 @@ export default async function ClientDashboardPage() {
               <Link href="/counselors">
                 <Button variant="link" className="p-0 h-auto text-base font-bold">カウンセラーを探す</Button>
               </Link>
-              <p className="text-sm text-gray-500">新しいカウンセラーを見つける</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">新しいカウンセラーを見つける</p>
             </div>
           </CardContent>
         </Card>
@@ -109,12 +109,12 @@ export default async function ClientDashboardPage() {
           {upcomingBookings.length > 0 ? (
             <div className="space-y-4">
               {upcomingBookings.map((booking: BookingRow) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
+                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 dark:border-gray-800">
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.counselor?.profiles?.display_name || booking.counselor?.profiles?.full_name || "カウンセラー"}
                     </p>
-                    <p className="text-sm text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge variant={statusVariants[booking.status]}>{statusLabels[booking.status]}</Badge>
@@ -124,7 +124,7 @@ export default async function ClientDashboardPage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center py-8">予約はありません</p>
+            <p className="text-gray-400 dark:text-gray-500 text-center py-8">予約はありません</p>
           )}
         </CardContent>
       </Card>
@@ -138,12 +138,12 @@ export default async function ClientDashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {pastBookings.map((booking: BookingRow) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
+                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 dark:border-gray-800">
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.counselor?.profiles?.display_name || booking.counselor?.profiles?.full_name || "カウンセラー"}
                     </p>
-                    <p className="text-sm text-gray-500">{formatDate(booking.scheduled_at)}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)}</p>
                   </div>
                   <Badge variant={statusVariants[booking.status]}>{statusLabels[booking.status]}</Badge>
                 </div>

@@ -86,8 +86,8 @@ export default async function JourneyPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">わたしの旅路</h1>
-        <p className="text-gray-500 mt-1">あなたの歩みとステージを見守ります。</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">わたしの旅路</h1>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">あなたの歩みとステージを見守ります。</p>
       </div>
 
       {/* Current stage hero */}
@@ -95,15 +95,15 @@ export default async function JourneyPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <Badge>{current.label}</Badge>
-            <span className="text-sm text-gray-500">{current.romaji}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{current.romaji}</span>
           </div>
           <CardTitle className="mt-2 text-2xl">現在のステージ: {current.label}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-700 mb-4">{current.description}</p>
+          <p className="text-gray-700 dark:text-gray-200 mb-4">{current.description}</p>
           <div>
-            <p className="text-sm font-semibold text-gray-900 mb-2">受けられる特典</p>
-            <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">受けられる特典</p>
+            <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-200">
               {current.perks.map((p) => (
                 <li key={p}>{p}</li>
               ))}
@@ -140,11 +140,11 @@ export default async function JourneyPage() {
                     <Badge variant="outline">達成済み</Badge>
                   )}
                 </div>
-                <p className="text-xs text-gray-500">{s.romaji}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{s.romaji}</p>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-3">{s.description}</p>
-                <ul className="text-xs text-gray-500 space-y-1">
+                <p className="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600 mb-3">{s.description}</p>
+                <ul className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 space-y-1">
                   <li>セッション: {s.requirements.sessions}回</li>
                   <li>ジャーナル: {s.requirements.journals}件</li>
                   <li>レビュー: {s.requirements.reviews}件</li>
@@ -176,12 +176,12 @@ export default async function JourneyPage() {
                 return (
                   <div key={String(key)}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-700">{REQUIREMENT_LABELS[String(key)] ?? String(key)}</span>
-                      <span className="text-gray-500">
+                      <span className="text-gray-700 dark:text-gray-200">{REQUIREMENT_LABELS[String(key)] ?? String(key)}</span>
+                      <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
                         {currentVal} / {required}
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-emerald-500 rounded-full transition-all"
                         style={{ width: `${pct}%` }}
@@ -197,7 +197,7 @@ export default async function JourneyPage() {
         </CardContent>
       </Card>
 
-      <p className="text-sm text-gray-500 text-center">
+      <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center">
         ステージは降格しません。期限もありません。あなたのペースで。
       </p>
     </div>

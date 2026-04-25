@@ -142,7 +142,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
     return (
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-20">
-          <p className="text-gray-500">読み込み中...</p>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">読み込み中...</p>
         </div>
       </div>
     )
@@ -152,7 +152,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
     return (
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-20">
-          <p className="text-gray-500 text-lg">カウンセラーが見つかりません</p>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-lg">カウンセラーが見つかりません</p>
           <Link href="/counselors" className="mt-4 inline-block">
             <Button variant="outline">カウンセラー一覧へ戻る</Button>
           </Link>
@@ -167,11 +167,11 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
         <Card className="text-center">
           <CardContent className="py-12 space-y-4">
             <CheckCircle className="h-16 w-16 text-emerald-500 mx-auto" />
-            <h1 className="text-2xl font-bold text-gray-900">予約が完了しました</h1>
-            <p className="text-gray-500">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">予約が完了しました</h1>
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {counselor.profiles?.display_name || counselor.profiles?.full_name}先生への予約が確定しました。
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-400 dark:text-gray-500">
               詳細はダッシュボードからご確認いただけます。
             </p>
             <div className="flex gap-3 justify-center pt-4">
@@ -204,12 +204,12 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
-      <Link href={`/counselors/${id}`} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600 mb-6">
+      <Link href={`/counselors/${id}`} className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-emerald-600 mb-6">
         <ArrowLeft className="h-4 w-4" />
         カウンセラー詳細に戻る
       </Link>
 
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">予約する</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">予約する</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Booking form */}
@@ -253,7 +253,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                           className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-colors cursor-pointer ${
                             isSelected
                               ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                              : "border-gray-200 hover:border-gray-300 text-gray-600"
+                              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 dark:text-gray-600"
                           }`}
                         >
                           <Icon className="h-5 w-5" />
@@ -295,7 +295,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                     required
-                    className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   >
                     <option value="">時間を選択</option>
                     {timeSlots.map((slot) => (
@@ -343,9 +343,9 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               <div className="flex items-center gap-3">
                 <Avatar src={counselor.profiles?.avatar_url} alt={name} size="lg" />
                 <div>
-                  <p className="font-semibold text-gray-900">{name}</p>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">{name}</p>
                   {counselor.title && (
-                    <p className="text-xs text-gray-500 line-clamp-1">{counselor.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 line-clamp-1">{counselor.title}</p>
                   )}
                 </div>
               </div>
@@ -354,19 +354,19 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">セッション形式</span>
+                  <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">セッション形式</span>
                   <span className="font-medium">{sessionTypeLabels[sessionType] || "未選択"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">日付</span>
+                  <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">日付</span>
                   <span className="font-medium">{date || "未選択"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">時間</span>
+                  <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">時間</span>
                   <span className="font-medium">{time || "未選択"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">セッション時間</span>
+                  <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">セッション時間</span>
                   <span className="font-medium">50分</span>
                 </div>
               </div>
@@ -374,13 +374,13 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               <Separator />
 
               <div className="flex justify-between items-baseline">
-                <span className="text-gray-500">合計</span>
+                <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">合計</span>
                 <span className="text-2xl font-bold text-emerald-600">
                   {formatPrice(counselor.hourly_rate)}
                 </span>
               </div>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 dark:text-gray-500">
                 ※ お支払いは予約確定後にご案内いたします
               </p>
             </CardContent>

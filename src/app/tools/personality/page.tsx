@@ -139,13 +139,13 @@ export default function PersonalityToolPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
       <header className="mb-8 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
           本格パーソナリティ診断
         </h1>
-        <p className="mt-3 text-gray-600">
+        <p className="mt-3 text-gray-600 dark:text-gray-300 dark:text-gray-600">
           生年月日から読み解く、4つのコア・アーキタイプ。自己理解のはじまりに。
         </p>
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
           これは自己理解のきっかけです。未来を予言するものではありません。
         </p>
       </header>
@@ -197,14 +197,14 @@ export default function PersonalityToolPage() {
             <CardTitle className="text-2xl">
               {result.label}（{result.jp}）
             </CardTitle>
-            <p className="mt-1 text-sm text-gray-600">{result.tagline}</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600">{result.tagline}</p>
           </CardHeader>
           <CardContent className="space-y-6">
-            <p className="leading-relaxed text-gray-800">{result.description}</p>
+            <p className="leading-relaxed text-gray-800 dark:text-gray-200">{result.description}</p>
 
             <section>
-              <h2 className="mb-2 text-sm font-semibold text-gray-900">強み</h2>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
+              <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">強み</h2>
+              <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700 dark:text-gray-200">
                 {result.strengths.map((s) => (
                   <li key={s}>{s}</li>
                 ))}
@@ -212,10 +212,10 @@ export default function PersonalityToolPage() {
             </section>
 
             <section>
-              <h2 className="mb-2 text-sm font-semibold text-gray-900">
+              <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
                 向き合いたい影の側面
               </h2>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
+              <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700 dark:text-gray-200">
                 {result.shadows.map((s) => (
                   <li key={s}>{s}</li>
                 ))}
@@ -223,10 +223,10 @@ export default function PersonalityToolPage() {
             </section>
 
             <section>
-              <h2 className="mb-2 text-sm font-semibold text-gray-900">
+              <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
                 内省のための問い
               </h2>
-              <ul className="space-y-2 text-sm text-gray-700">
+              <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-200">
                 {result.prompts.map((p) => (
                   <li key={p} className="rounded-md bg-emerald-50 px-3 py-2">
                     {p}
@@ -238,7 +238,7 @@ export default function PersonalityToolPage() {
             <Separator />
 
             <section className="space-y-3">
-              <h2 className="text-sm font-semibold text-gray-900">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 さらに深く知りたい方へ
               </h2>
               <Link href="/counselors?methodology=personality_matrix_32">

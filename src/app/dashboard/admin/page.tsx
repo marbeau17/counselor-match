@@ -41,8 +41,8 @@ export default async function AdminDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">管理者ダッシュボード</h1>
-        <p className="text-gray-500 mt-1">プラットフォーム概要</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">管理者ダッシュボード</h1>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">プラットフォーム概要</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -54,7 +54,7 @@ export default async function AdminDashboardPage() {
               </div>
               <div>
                 <p className="text-3xl font-bold">{totalUsers || 0}</p>
-                <p className="text-sm text-gray-500">総ユーザー数</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">総ユーザー数</p>
               </div>
             </div>
           </CardContent>
@@ -67,7 +67,7 @@ export default async function AdminDashboardPage() {
               </div>
               <div>
                 <p className="text-3xl font-bold">{totalCounselors || 0}</p>
-                <p className="text-sm text-gray-500">アクティブカウンセラー</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">アクティブカウンセラー</p>
               </div>
             </div>
           </CardContent>
@@ -80,7 +80,7 @@ export default async function AdminDashboardPage() {
               </div>
               <div>
                 <p className="text-3xl font-bold">{totalBookings || 0}</p>
-                <p className="text-sm text-gray-500">総予約数</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">総予約数</p>
               </div>
             </div>
           </CardContent>
@@ -93,7 +93,7 @@ export default async function AdminDashboardPage() {
               </div>
               <div>
                 <p className="text-3xl font-bold">{formatPrice(totalRevenue)}</p>
-                <p className="text-sm text-gray-500">プラットフォーム収益</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">プラットフォーム収益</p>
               </div>
             </div>
           </CardContent>
@@ -106,7 +106,7 @@ export default async function AdminDashboardPage() {
             <CardTitle>最近の予約</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-400 text-center py-8">データがありません</p>
+            <p className="text-gray-400 dark:text-gray-500 text-center py-8">データがありません</p>
           </CardContent>
         </Card>
         <Card>
@@ -114,7 +114,7 @@ export default async function AdminDashboardPage() {
             <CardTitle>新規ユーザー</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-400 text-center py-8">データがありません</p>
+            <p className="text-gray-400 dark:text-gray-500 text-center py-8">データがありません</p>
           </CardContent>
         </Card>
       </div>

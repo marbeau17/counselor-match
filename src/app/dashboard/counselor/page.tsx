@@ -54,10 +54,10 @@ export default async function CounselorDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           カウンセラーダッシュボード
         </h1>
-        <p className="text-gray-500 mt-1">{profile?.display_name || profile?.full_name}先生</p>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{profile?.display_name || profile?.full_name}先生</p>
       </div>
 
       {/* Stats */}
@@ -69,7 +69,7 @@ export default async function CounselorDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{pendingBookings.length}</p>
-              <p className="text-sm text-gray-500">承認待ち</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">承認待ち</p>
             </div>
           </CardContent>
         </Card>
@@ -80,7 +80,7 @@ export default async function CounselorDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{confirmedBookings.length}</p>
-              <p className="text-sm text-gray-500">予約確定</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">予約確定</p>
             </div>
           </CardContent>
         </Card>
@@ -91,7 +91,7 @@ export default async function CounselorDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{counselor?.session_count || 0}</p>
-              <p className="text-sm text-gray-500">総セッション</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">総セッション</p>
             </div>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export default async function CounselorDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{formatPrice(totalEarnings)}</p>
-              <p className="text-sm text-gray-500">総収益</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">総収益</p>
             </div>
           </CardContent>
         </Card>
@@ -119,10 +119,10 @@ export default async function CounselorDashboardPage() {
               {pendingBookings.map((booking: BookingRow) => (
                 <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-yellow-100 bg-yellow-50">
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.client?.display_name || booking.client?.full_name || "クライアント"}
                     </p>
-                    <p className="text-sm text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button size="sm">承認</Button>
@@ -144,20 +144,20 @@ export default async function CounselorDashboardPage() {
           {confirmedBookings.length > 0 ? (
             <div className="space-y-4">
               {confirmedBookings.map((booking: BookingRow) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
+                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 dark:border-gray-800">
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.client?.display_name || booking.client?.full_name || "クライアント"}
                     </p>
-                    <p className="text-sm text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
-                    {booking.notes && <p className="text-sm text-gray-400 mt-1">{booking.notes}</p>}
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
+                    {booking.notes && <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{booking.notes}</p>}
                   </div>
                   <Badge variant="default">確定</Badge>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center py-8">予約されているセッションはありません</p>
+            <p className="text-gray-400 dark:text-gray-500 text-center py-8">予約されているセッションはありません</p>
           )}
         </CardContent>
       </Card>

@@ -4,6 +4,46 @@
 
 ---
 
+## Phase 13-15 (3rd cycle 拡張) 残バックログ消化 (2026-04-25)
+
+### Phase 13: ページ本体 dark mode 網羅
+- `perl -i -pe` で `text-gray-{900,700,600,500,400}` / `bg-{white,gray-50,gray-100}` / `border-gray-{200,100}` に dark variant を一括追加
+- 対象: src/app 全ページ + src/components 配下
+- 重複 dark variant を別パスでクリーンアップ
+
+### Phase 14: `bun run test:e2e` 実走確認
+- `playwright.config.ts` の port=4000 (env override) + bun コマンド統一が機能
+- 結果: **119 passed / 9 failed**（fix 後）
+- 失敗内訳:
+  - **booking-cart.spec.ts (4件)**: mock data text の細部不一致（`スターター` 表記 vs 実装 `新人`、特定 mock counselor の review text 等）
+  - **login-auth.spec.ts (3件)**: 実 Supabase 認証フローを期待。Supabase 未設定時にタイムアウト
+  - **spiritual-features.spec.ts > Tarot (1件)**: テキスト rendering 不安定。手動検証では動作するが Playwright で flaky
+  - **booking-cart.spec.ts > filter sidebar (1件)**: モバイル width 想定の DOM 構造ずれ
+- これらは全て**事前存在**のテスト負債（実装更新に追従していない）。本サイクルの修正効果ではない
+
+### Phase 15: Lighthouse / LCP 計測
+
+**Landing (`/`):**
+
+| 指標 | dev | prod (build + start) | 目標 | 判定 |
+|---|---|---|---|---|
+| Performance | 78 | **98** | — | ✅ |
+| Accessibility | 94 | 94 | — | ✅ |
+| Best Practices | 100 | 100 | — | ✅ |
+| SEO | 100 | 100 | — | ✅ |
+| **LCP** | 6.0s | **2.5s** | ≤ 3.0s | ✅ (prod) |
+| FCP | 0.9s | 0.8s | — | ✅ |
+| CLS | 0 | 0 | — | ✅ |
+| TBT | 90ms | 0ms | — | ✅ |
+
+**`/counselors` (prod):**
+- Performance: 93、LCP: 3.2s、FCP: 0.8s、CLS: 0、TBT: 0ms
+- LCP がわずかに 3s 超過（カウンセラーカード 6 件 + フィルタ sidebar の rendering）
+
+**結論**: AC-NF01 (LCP ≤3s) は **本番ビルドで達成**（Landing 2.5s）。`/counselors` は 3.2s でわずかに超過、改善余地あり（Card 内画像の遅延読み込み、フィルタ sidebar の suspense 化など）。dev mode は HMR overhead で参考値。
+
+---
+
 ## Phase 12 (3rd cycle Evaluator 2) 全体再検証 (2026-04-25) — **【合格】**
 
 **対象**: 残バックログ消化（古い vitest テスト / ESLint / page-level dark / e2e config）

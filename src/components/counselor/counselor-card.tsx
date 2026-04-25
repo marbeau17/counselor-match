@@ -43,7 +43,7 @@ function AvailabilityBadge({ mode }: { mode?: AvailabilityMode }) {
 
   if (mode === "accepting_bookings") {
     return (
-      <span className="inline-flex items-center rounded-full border border-emerald-500 bg-white px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+      <span className="inline-flex items-center rounded-full border border-emerald-500 bg-white dark:bg-gray-950 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
         予約受付中
       </span>
     )
@@ -51,7 +51,7 @@ function AvailabilityBadge({ mode }: { mode?: AvailabilityMode }) {
 
   if (mode === "offline") {
     return (
-      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-500">
+      <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-500 dark:text-gray-400 dark:text-gray-500">
         オフライン
       </span>
     )
@@ -79,15 +79,15 @@ export function CounselorCard({ counselor }: CounselorCardProps) {
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">{name}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">{name}</h3>
               <Badge variant={levelVariants[counselor.level]}>
                 {levelLabels[counselor.level]}
               </Badge>
             </div>
             {counselor.title && (
-              <p className="text-sm text-gray-500 mt-1">{counselor.title}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{counselor.title}</p>
             )}
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
               {counselor.rating_count > 0 && (
                 <span className="flex items-center gap-1">
                   <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
@@ -114,7 +114,7 @@ export function CounselorCard({ counselor }: CounselorCardProps) {
                   const concern = concernBySlug(slug)
                   if (!concern) return null
                   return (
-                    <Badge key={slug} variant="outline" className="text-xs border-gray-200">
+                    <Badge key={slug} variant="outline" className="text-xs border-gray-200 dark:border-gray-700">
                       {concern.label}
                     </Badge>
                   )
@@ -129,14 +129,14 @@ export function CounselorCard({ counselor }: CounselorCardProps) {
                   ¥{counselor.price_per_minute}
                   <span className="text-sm font-semibold">/分</span>
                 </p>
-                <p className="text-xs text-gray-400">+ 予約可</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">+ 予約可</p>
               </>
             ) : (
               <>
                 <p className="text-lg font-bold text-emerald-600">
                   {formatPrice(counselor.hourly_rate)}
                 </p>
-                <p className="text-xs text-gray-400">/ 50分</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">/ 50分</p>
               </>
             )}
             <Link href={`/counselors/${counselor.id}`} className="mt-3 block">

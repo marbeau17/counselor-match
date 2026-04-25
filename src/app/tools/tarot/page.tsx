@@ -126,9 +126,9 @@ export default function TarotReflectionPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl border border-indigo-100 bg-white p-6 shadow-sm"
+          className="rounded-xl border border-indigo-100 bg-white dark:bg-gray-950 p-6 shadow-sm"
         >
-          <label htmlFor="question" className="block text-sm font-medium text-gray-800">
+          <label htmlFor="question" className="block text-sm font-medium text-gray-800 dark:text-gray-200">
             今、心にある問いを書いてみてください（10文字以上）
           </label>
           <textarea
@@ -139,7 +139,7 @@ export default function TarotReflectionPage() {
             required
             minLength={10}
             placeholder="例：この関係を続けるかどうか、自分の中で迷っています。"
-            className="mt-2 w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="mt-2 w-full resize-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
           {error && (
             <p className="mt-2 text-xs text-red-600" role="alert">
@@ -157,7 +157,7 @@ export default function TarotReflectionPage() {
         {drawn && (
           <section
             key={drawn.nameEn}
-            className="mt-10 animate-[fadeIn_0.6s_ease-out] rounded-xl border border-purple-200 bg-white p-8 shadow-md"
+            className="mt-10 animate-[fadeIn_0.6s_ease-out] rounded-xl border border-purple-200 bg-white dark:bg-gray-950 p-8 shadow-md"
             aria-live="polite"
           >
             <div className="text-center">
@@ -173,12 +173,12 @@ export default function TarotReflectionPage() {
               {drawn.prompt}
             </blockquote>
 
-            <div className="rounded-md bg-gray-50 px-4 py-3 text-sm text-gray-700">
-              <span className="font-semibold text-gray-800">グラウンディングのヒント：</span>
+            <div className="rounded-md bg-gray-50 dark:bg-gray-900 px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
+              <span className="font-semibold text-gray-800 dark:text-gray-200">グラウンディングのヒント：</span>
               <span className="ml-1">{drawn.grounding}</span>
             </div>
 
-            <p className="mt-6 text-center text-xs text-gray-500">
+            <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
               少し時間をとって、このカードと対話してみてください。
             </p>
 

@@ -94,10 +94,10 @@ export default function LoginPage() {
           </form>
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-gray-200 dark:border-gray-700" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-gray-400">または</span>
+              <span className="bg-white dark:bg-gray-950 px-2 text-gray-400 dark:text-gray-500">または</span>
             </div>
           </div>
           <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
@@ -105,7 +105,7 @@ export default function LoginPage() {
           </Button>
         </CardContent>
         <CardFooter className="justify-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             アカウントをお持ちでない方は{" "}
             <Link href="/register" className="text-emerald-600 hover:underline font-medium">
               新規登録

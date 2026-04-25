@@ -104,8 +104,8 @@ export default function CompatibilityPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">相性診断</h1>
-        <p className="text-lg text-gray-600">生年月日から見る、二人の魂のダイナミクス。</p>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">相性診断</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-600">生年月日から見る、二人の魂のダイナミクス。</p>
       </div>
 
       <Card className="mb-6 bg-amber-50 border-amber-200">
@@ -170,27 +170,27 @@ export default function CompatibilityPage() {
           <Card className="mb-6 bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
             <CardContent className="p-6 md:p-8">
               <div className="text-center mb-6">
-                <p className="text-sm text-gray-500 mb-2">相性スコア</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-2">相性スコア</p>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-6xl font-bold text-emerald-700">{result.score}</span>
-                  <span className="text-xl text-gray-500">/ 100</span>
+                  <span className="text-xl text-gray-500 dark:text-gray-400 dark:text-gray-500">/ 100</span>
                 </div>
                 <div className="mt-3 inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 px-4 py-1 text-sm font-medium">
                   {result.label}
                 </div>
               </div>
 
-              <p className="text-sm text-gray-700 leading-relaxed mb-6">
+              <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
                 {result.interpretation}
               </p>
 
               <div className="border-t border-emerald-200 pt-5">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                   二人で見つめ合うための問いかけ
                 </h3>
                 <ul className="space-y-2">
                   {result.prompts.map((p, i) => (
-                    <li key={i} className="text-sm text-gray-700 leading-relaxed pl-4 border-l-2 border-emerald-300">
+                    <li key={i} className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed pl-4 border-l-2 border-emerald-300">
                       {p}
                     </li>
                   ))}
@@ -201,7 +201,7 @@ export default function CompatibilityPage() {
 
           <Card className="mb-6">
             <CardContent className="p-6 text-center">
-              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+              <p className="text-sm text-gray-600 dark:text-gray-300 dark:text-gray-600 mb-4 leading-relaxed">
                 診断結果は出発点です。関係性の奥にある感情や願いを、専門のカウンセラーと一緒に見つめてみませんか。
               </p>
               <Link href="/counselors?concern=family">
@@ -213,13 +213,13 @@ export default function CompatibilityPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-50 border-dashed">
+          <Card className="bg-gray-50 dark:bg-gray-900 border-dashed">
             <CardContent className="p-6 text-center">
-              <Mail className="h-6 w-6 text-gray-500 mx-auto mb-3" />
-              <h3 className="text-base font-semibold text-gray-900 mb-2">
+              <Mail className="h-6 w-6 text-gray-500 dark:text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 詳細レポートをメールで受け取る（無料）
               </h3>
-              <p className="text-xs text-gray-500 mb-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">
                 お二人の関係をより深く紐解くレポートをお届けします。
               </p>
               <Link href="/register">

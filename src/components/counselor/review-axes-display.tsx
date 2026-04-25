@@ -45,7 +45,7 @@ export function ReviewAxesDisplay({ axes, size = "lg" }: ReviewAxesDisplayProps)
         const pct = hasScore ? Math.max(0, Math.min(100, (score! / 5) * 100)) : 0
         return (
           <div key={axis} className={cn("flex items-center", rowGap)}>
-            <div className={cn("shrink-0 text-gray-600", labelSize, labelWidth)}>
+            <div className={cn("shrink-0 text-gray-600 dark:text-gray-300 dark:text-gray-600", labelSize, labelWidth)}>
               {AXIS_LABELS[axis]}
             </div>
             <div
@@ -53,8 +53,8 @@ export function ReviewAxesDisplay({ axes, size = "lg" }: ReviewAxesDisplayProps)
                 "relative flex-1 rounded-full overflow-hidden",
                 barHeight,
                 hasScore
-                  ? "bg-gray-100"
-                  : "border border-dashed border-gray-200 bg-transparent",
+                  ? "bg-gray-100 dark:bg-gray-800"
+                  : "border border-dashed border-gray-200 dark:border-gray-700 bg-transparent",
               )}
             >
               {hasScore && (
@@ -68,7 +68,7 @@ export function ReviewAxesDisplay({ axes, size = "lg" }: ReviewAxesDisplayProps)
               className={cn(
                 "shrink-0 w-8 text-right tabular-nums",
                 valueSize,
-                hasScore ? "text-gray-700" : "text-gray-300",
+                hasScore ? "text-gray-700 dark:text-gray-200" : "text-gray-300 dark:text-gray-600",
               )}
             >
               {hasScore ? score!.toFixed(1) : "—"}

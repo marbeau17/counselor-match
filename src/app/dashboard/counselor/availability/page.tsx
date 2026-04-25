@@ -67,9 +67,9 @@ export default function CounselorAvailabilityPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">受付状態の設定</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">受付状態の設定</h1>
       <Card className="mb-6">
-        <CardContent className="p-4 text-sm text-gray-600">
+        <CardContent className="p-4 text-sm text-gray-600 dark:text-gray-300">
           待機中にすると、クライアントから即時の通話リクエストが届きます。必要な時だけ切り替えてください。
         </CardContent>
       </Card>
@@ -88,22 +88,22 @@ export default function CounselorAvailabilityPage() {
                 <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
                   <input type="radio" name="availability_mode" value={opt.value} checked={mode === opt.value}
                     onChange={() => setMode(opt.value)} disabled={disabled || loading} />
-                  <span className="text-sm text-gray-900">{opt.label}</span>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">{opt.label}</span>
                 </label>
               ))}
             </div>
             <label className="flex items-center gap-2 cursor-pointer pt-2 border-t">
               <input type="checkbox" checked={onDemand} onChange={e => setOnDemand(e.target.checked)} disabled={disabled || loading} />
-              <span className="text-sm text-gray-900">オンデマンド通話を受け付ける</span>
+              <span className="text-sm text-gray-900 dark:text-gray-100">オンデマンド通話を受け付ける</span>
             </label>
             {onDemand && (
               <div>
-                <label className="block text-sm text-gray-700 mb-1">分あたりの料金 (円)</label>
+                <label className="block text-sm text-gray-700 dark:text-gray-200 mb-1">分あたりの料金 (円)</label>
                 <input type="number" min={0} value={pricePerMinute}
                   onChange={e => setPricePerMinute(e.target.value === "" ? "" : Number(e.target.value))}
                   disabled={disabled || loading}
                   className="w-48 rounded-md border border-gray-300 px-3 py-2 text-sm" />
-                <p className="text-xs text-gray-500 mt-1">予約価格の1.3–1.5倍を推奨。</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">予約価格の1.3–1.5倍を推奨。</p>
               </div>
             )}
             <div className="pt-4">
