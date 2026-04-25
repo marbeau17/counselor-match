@@ -895,3 +895,269 @@ export function CertificationsSection({ props }: { props: AnyProps }) {
     </section>
   )
 }
+
+// =============================================================================
+// FAQ_QA (LLMO: FAQPage schema + 視覚 accordion 風)
+// =============================================================================
+export function FaqQaSection({ props }: { props: AnyProps }) {
+  const items = (props.items as { question?: string; answer?: string }[] | undefined) ?? []
+  const heading = props.heading ? String(props.heading) : "よくあるご質問"
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : "FAQ"
+  if (items.length === 0) return null
+
+  // FAQPage JSON-LD (LLMO 引用最適化)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items
+      .filter((it) => it.question && it.answer)
+      .map((it) => ({
+        "@type": "Question",
+        name: it.question,
+        acceptedAnswer: { "@type": "Answer", text: it.answer },
+      })),
+  }
+
+  return (
+    <section className="py-20 sm:py-28 bg-base dark:bg-gray-950">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          {eyebrow && (
+            <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">— {eyebrow}</p>
+          )}
+          <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+            {heading}
+          </h2>
+        </div>
+        <dl className="space-y-4">
+          {items.map((it, i) => (
+            <details
+              key={i}
+              className="group bg-card dark:bg-gray-950 border border-accent-quiet/60 dark:border-gray-800 rounded-tl-2xl rounded-br-2xl p-6 sm:p-7"
+            >
+              <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-serif text-base sm:text-lg text-primary dark:text-gray-100 font-medium leading-relaxed">
+                <span>{it.question}</span>
+                <span className="text-accent-primary group-open:rotate-45 transition-transform shrink-0 mt-1" aria-hidden>
+                  +
+                </span>
+              </summary>
+              <div className="mt-4 pt-4 border-t border-accent-quiet/40 dark:border-gray-800 text-sm sm:text-base text-secondary dark:text-gray-300 leading-loose whitespace-pre-line">
+                {it.answer}
+              </div>
+            </details>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// HOWTO_STEPS_V2 (LLMO: HowTo schema + 番号付きステップ)
+// =============================================================================
+export function HowtoStepsV2Section({ props }: { props: AnyProps }) {
+  const items = (props.items as { name?: string; text?: string; image_url?: string }[] | undefined) ?? []
+  const heading = props.heading ? String(props.heading) : "進め方"
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : "HowTo"
+  const totalTime = props.total_time ? String(props.total_time) : null
+  if (items.length === 0) return null
+
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: heading,
+    step: items
+      .filter((it) => it.name)
+      .map((it, i) => ({
+        "@type": "HowToStep",
+        position: i + 1,
+        name: it.name,
+        text: it.text,
+        ...(it.image_url ? { image: it.image_url } : {}),
+      })),
+  }
+  if (totalTime) jsonLd.totalTime = totalTime
+
+  return (
+    <section className="py-20 sm:py-28 bg-accent-quiet/20 dark:bg-gray-900">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          {eyebrow && (
+            <p className="font-accent text-base text-accent-primary mb-3 tracking-wide">— {eyebrow}</p>
+          )}
+          <h2 className="font-serif text-3xl sm:text-4xl text-primary dark:text-gray-100 leading-snug font-medium">
+            {heading}
+          </h2>
+        </div>
+        <ol className="space-y-8">
+          {items.map((it, i) => (
+            <li key={i} className="flex gap-6 items-start">
+              <span className="font-accent text-3xl text-accent-primary shrink-0 leading-none mt-1">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div className="flex-1">
+                <h3 className="font-serif text-xl text-primary dark:text-gray-100 font-medium leading-snug mb-2">
+                  {it.name}
+                </h3>
+                {it.text && (
+                  <p className="text-base text-secondary dark:text-gray-300 leading-loose whitespace-pre-line">
+                    {it.text}
+                  </p>
+                )}
+                {it.image_url && (
+                  <div className="relative w-full aspect-[16/9] mt-4 rounded-lg overflow-hidden">
+                    <Image src={it.image_url} alt={it.name ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 800px" />
+                  </div>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// CITATIONS (出典・引用 / E-E-A-T 強化)
+// =============================================================================
+export function CitationsSection({ props }: { props: AnyProps }) {
+  const items = (props.items as { url?: string; title?: string; author?: string; date?: string }[] | undefined) ?? []
+  const heading = props.heading ? String(props.heading) : "引用・参考文献"
+  const eyebrow = props.eyebrow ? String(props.eyebrow) : "References"
+  if (items.length === 0) return null
+
+  return (
+    <section className="py-16 bg-base dark:bg-gray-950">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        {eyebrow && (
+          <p className="font-accent text-sm text-accent-primary mb-2 tracking-wide">— {eyebrow}</p>
+        )}
+        <h2 className="font-serif text-xl sm:text-2xl text-primary dark:text-gray-100 mb-6 font-medium">
+          {heading}
+        </h2>
+        <ul className="space-y-3 text-sm text-secondary dark:text-gray-400">
+          {items.map((it, i) => (
+            <li key={i} className="border-l-2 border-accent-primary/40 pl-4 py-1">
+              {it.url ? (
+                <a
+                  href={it.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent-primary underline underline-offset-2 hover:text-primary transition-colors"
+                >
+                  {it.title ?? it.url}
+                </a>
+              ) : (
+                <span className="text-primary dark:text-gray-200">{it.title}</span>
+              )}
+              {(it.author || it.date) && (
+                <p className="text-xs text-muted dark:text-gray-500 mt-1">
+                  {it.author && <span>{it.author}</span>}
+                  {it.author && it.date && <span> · </span>}
+                  {it.date && <time>{it.date}</time>}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// EXPERT_AUTHORSHIP (E-E-A-T: 著者・運営者の専門性訴求)
+// =============================================================================
+export function ExpertAuthorshipSection({ props }: { props: AnyProps }) {
+  const name = props.name ? String(props.name) : ""
+  const role = props.role ? String(props.role) : ""
+  const bio = props.bio ? String(props.bio) : ""
+  const credentials = (props.credentials as string[] | undefined) ?? []
+  const photoUrl = props.photo_url ? String(props.photo_url) : null
+  const updatedAt = props.updated_at ? String(props.updated_at) : null
+
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    ...(role ? { jobTitle: role } : {}),
+    ...(bio ? { description: bio } : {}),
+    ...(credentials.length > 0 ? { hasCredential: credentials } : {}),
+  }
+
+  return (
+    <section className="py-16 bg-accent-quiet/20 dark:bg-gray-900">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
+          {photoUrl && (
+            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-accent-quiet shrink-0">
+              <Image src={photoUrl} alt={name} fill className="object-cover" sizes="128px" />
+            </div>
+          )}
+          <div className="flex-1 text-center sm:text-left">
+            <p className="font-accent text-sm text-accent-primary mb-1">— Author</p>
+            <h2 className="font-serif text-2xl text-primary dark:text-gray-100 font-medium">{name}</h2>
+            {role && <p className="text-sm text-secondary dark:text-gray-400 mt-1">{role}</p>}
+            {bio && (
+              <p className="mt-4 text-sm text-secondary dark:text-gray-300 leading-loose whitespace-pre-line">
+                {bio}
+              </p>
+            )}
+            {credentials.length > 0 && (
+              <ul className="mt-4 flex flex-wrap gap-2 justify-center sm:justify-start">
+                {credentials.map((c, i) => (
+                  <li key={i} className="text-xs px-3 py-1 rounded-full bg-card border border-accent-quiet text-accent-primary">
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {updatedAt && (
+              <p className="mt-4 text-xs text-muted dark:text-gray-500 font-accent italic">
+                Last reviewed: <time dateTime={updatedAt}>{updatedAt}</time>
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// TLDR (LLM 引用しやすい要約ボックス)
+// =============================================================================
+export function TldrSection({ props }: { props: AnyProps }) {
+  const summary = props.summary ? String(props.summary) : ""
+  const heading = props.heading ? String(props.heading) : "TL;DR — このページの要約"
+  if (!summary) return null
+
+  // Question/Answer 形式の JSON-LD で LLM が引用しやすく
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Question",
+    name: heading,
+    acceptedAnswer: { "@type": "Answer", text: summary },
+  }
+
+  return (
+    <section className="py-12 bg-base dark:bg-gray-950">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <aside
+          aria-label={heading}
+          className="bg-accent-quiet/30 dark:bg-gray-900 border-l-4 border-accent-primary p-6 sm:p-8 rounded-tr-xl rounded-br-xl"
+        >
+          <p className="font-accent text-sm text-accent-primary mb-2">— TL;DR</p>
+          <p className="font-serif text-base sm:text-lg text-primary dark:text-gray-100 leading-loose whitespace-pre-line">
+            {summary}
+          </p>
+        </aside>
+      </div>
+    </section>
+  )
+}

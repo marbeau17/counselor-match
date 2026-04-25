@@ -7,6 +7,8 @@ import {
   LeadCaptureSection, RichTextSection, MarqueeSection,
   VideoEmbedSection, CertificationsSection, GallerySection,
   StoryNarrativeSection,
+  FaqQaSection, HowtoStepsV2Section, CitationsSection,
+  ExpertAuthorshipSection, TldrSection,
 } from "./sections"
 
 export { SECTION_LABELS, SECTION_TYPES } from "./section-types"
@@ -39,6 +41,12 @@ export const SECTION_REGISTRY: Record<string, SectionComp> = {
   certifications: CertificationsSection,
   gallery: GallerySection,
   story_narrative: StoryNarrativeSection,
+  // SEO/LLMO 新規 (20260427)
+  faq_qa: FaqQaSection,
+  howto_steps_v2: HowtoStepsV2Section,
+  citations: CitationsSection,
+  expert_authorship: ExpertAuthorshipSection,
+  tldr: TldrSection,
 }
 
 export async function SectionRenderer({

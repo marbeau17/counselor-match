@@ -21,6 +21,25 @@ export type ResolvedSection = {
   section_type: string
   sort_order: number
   props: Record<string, unknown>
+  // SEO/LLMO 拡張 (20260427)
+  heading_level?: 'h1' | 'h2' | 'h3'
+  seo_keywords?: string[] | null
+  qa_pairs?: { question: string; answer: string }[] | null
+  howto_steps?: { name: string; text: string; image_url?: string }[] | null
+  citations?: { url: string; title: string; author?: string; date?: string }[] | null
+  direct_answer?: string | null
+}
+
+/** ページレベル SEO 設定 (landing_pages テーブル) */
+export type LandingPageSeo = {
+  page_key: string
+  seo_title: string | null
+  seo_description: string | null
+  seo_canonical: string | null
+  og_image_url: string | null
+  robots_index: boolean
+  breadcrumb_label: string | null
+  updated_at: string
 }
 
 /** 公開済みセクション (RLS 経由で is_visible AND published_props IS NOT NULL のみ) */
@@ -29,7 +48,7 @@ export async function fetchPublishedSections(pageKey = "home"): Promise<Resolved
   if (!supabase) return pageKey === "home" ? DEFAULT_HOME_SECTIONS : []
   const { data, error } = await supabase
     .from("landing_sections")
-    .select("id, section_type, sort_order, published_props, variant_key, variant_weight")
+    .select("id, section_type, sort_order, published_props, variant_key, variant_weight, heading_level, seo_keywords, qa_pairs, howto_steps, citations, direct_answer")
     .eq("page_key", pageKey)
     .eq("is_visible", true)
     .order("sort_order", { ascending: true })
@@ -41,6 +60,12 @@ export async function fetchPublishedSections(pageKey = "home"): Promise<Resolved
     published_props: Record<string, unknown> | null
     variant_key: string | null
     variant_weight: number
+    heading_level: 'h1' | 'h2' | 'h3' | null
+    seo_keywords: string[] | null
+    qa_pairs: { question: string; answer: string }[] | null
+    howto_steps: { name: string; text: string; image_url?: string }[] | null
+    citations: { url: string; title: string; author?: string; date?: string }[] | null
+    direct_answer: string | null
   }
   const rows = (data as unknown as Row[]).filter((r) => r.published_props !== null)
   if (rows.length === 0 && pageKey === "home") return DEFAULT_HOME_SECTIONS
@@ -51,7 +76,26 @@ export async function fetchPublishedSections(pageKey = "home"): Promise<Resolved
     props: r.published_props!,
     variant_key: r.variant_key,
     variant_weight: r.variant_weight,
+    heading_level: r.heading_level ?? undefined,
+    seo_keywords: r.seo_keywords,
+    qa_pairs: r.qa_pairs,
+    howto_steps: r.howto_steps,
+    citations: r.citations,
+    direct_answer: r.direct_answer,
   })))
+}
+
+/** ページレベル SEO 設定取得 */
+export async function fetchLandingPageSeo(pageKey = "home"): Promise<LandingPageSeo | null> {
+  const supabase = await createClient()
+  if (!supabase) return null
+  const { data, error } = await supabase
+    .from("landing_pages")
+    .select("*")
+    .eq("page_key", pageKey)
+    .maybeSingle()
+  if (error || !data) return null
+  return data as unknown as LandingPageSeo
 }
 
 /** 管理側プレビュー用 — draft_props を読む (service_role 必須) */
@@ -92,9 +136,21 @@ type WithVariant = ResolvedSection & {
 function resolveVariants(input: WithVariant[]): ResolvedSection[] {
   const groups = new Map<string, WithVariant[]>()
   const result: ResolvedSection[] = []
+  const stripVariant = (s: WithVariant): ResolvedSection => ({
+    id: s.id,
+    section_type: s.section_type,
+    sort_order: s.sort_order,
+    props: s.props,
+    heading_level: s.heading_level,
+    seo_keywords: s.seo_keywords,
+    qa_pairs: s.qa_pairs,
+    howto_steps: s.howto_steps,
+    citations: s.citations,
+    direct_answer: s.direct_answer,
+  })
   for (const s of input) {
     if (!s.variant_key) {
-      result.push({ id: s.id, section_type: s.section_type, sort_order: s.sort_order, props: s.props })
+      result.push(stripVariant(s))
       continue
     }
     const arr = groups.get(s.variant_key) ?? []
@@ -110,7 +166,7 @@ function resolveVariants(input: WithVariant[]): ResolvedSection[] {
       acc += Math.max(1, s.variant_weight)
       if (r < acc) { chosen = s; break }
     }
-    result.push({ id: chosen.id, section_type: chosen.section_type, sort_order: chosen.sort_order, props: chosen.props })
+    result.push(stripVariant(chosen))
   }
   return result.sort((a, b) => a.sort_order - b.sort_order)
 }

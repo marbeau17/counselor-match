@@ -25,6 +25,12 @@ export const SECTION_LABELS: Record<string, string> = {
   certifications: "認定 / 資格",
   gallery: "ギャラリー (画像群)",
   story_narrative: "ストーリー (ナラティブ長文)",
+  // SEO/LLMO 新規 (20260427)
+  faq_qa: "FAQ Q&A (FAQPage schema)",
+  howto_steps_v2: "HowTo ステップ (HowTo schema)",
+  citations: "引用・参考文献 (E-E-A-T)",
+  expert_authorship: "著者プロフィール (E-E-A-T)",
+  tldr: "TL;DR 要約 (LLM 引用最適化)",
 }
 
 export const SECTION_TYPES = Object.keys(SECTION_LABELS)

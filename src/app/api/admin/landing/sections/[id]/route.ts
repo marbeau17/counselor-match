@@ -14,7 +14,11 @@ export async function PATCH(
 
   const body = await request.json().catch(() => ({}))
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() }
-  for (const f of ["sort_order", "is_visible", "draft_props", "variant_key", "variant_weight"]) {
+  for (const f of [
+    "sort_order", "is_visible", "draft_props", "variant_key", "variant_weight",
+    // SEO/LLMO 列 (20260427)
+    "heading_level", "seo_keywords", "qa_pairs", "howto_steps", "citations", "direct_answer",
+  ]) {
     if (f in body) updates[f] = body[f]
   }
 
