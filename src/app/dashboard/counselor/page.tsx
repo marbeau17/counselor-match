@@ -3,21 +3,16 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, Users, Star, TrendingUp } from "lucide-react"
+import { Calendar, Users, TrendingUp } from "lucide-react"
 import { formatPrice, formatDate } from "@/lib/utils"
 
-const statusLabels: Record<string, string> = {
-  pending: "確認待ち",
-  confirmed: "確定",
-  completed: "完了",
-  cancelled: "キャンセル",
-}
-
-const statusVariants: Record<string, "default" | "secondary" | "warning" | "destructive"> = {
-  pending: "warning",
-  confirmed: "default",
-  completed: "secondary",
-  cancelled: "destructive",
+type BookingRow = {
+  id: string
+  scheduled_at: string
+  duration_minutes: number
+  status: string
+  notes?: string
+  client?: { display_name?: string; full_name?: string }
 }
 
 export default async function CounselorDashboardPage() {
@@ -121,7 +116,7 @@ export default async function CounselorDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {pendingBookings.map((booking: any) => (
+              {pendingBookings.map((booking: BookingRow) => (
                 <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-yellow-100 bg-yellow-50">
                   <div>
                     <p className="font-medium text-gray-900">
@@ -148,7 +143,7 @@ export default async function CounselorDashboardPage() {
         <CardContent>
           {confirmedBookings.length > 0 ? (
             <div className="space-y-4">
-              {confirmedBookings.map((booking: any) => (
+              {confirmedBookings.map((booking: BookingRow) => (
                 <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
                   <div>
                     <p className="font-medium text-gray-900">

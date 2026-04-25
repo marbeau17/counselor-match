@@ -25,6 +25,8 @@ function Avatar({ className, src, alt, fallback, size = "md", ...props }: Avatar
   return (
     <div className={cn("relative inline-flex items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-medium overflow-hidden", sizeClasses[size], className)} {...props}>
       {src && !imgError ? (
+        // 外部 Supabase URL 等の動的画像で onError フォールバックが必要なため通常 <img> を使用
+        // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt={alt || ''} className="h-full w-full object-cover" onError={() => setImgError(true)} />
       ) : (
         <span>{initials}</span>

@@ -39,7 +39,7 @@ test.describe('Google OAuth - Login Page', () => {
     const googleButton = page.getByRole('button', { name: /Google/ })
 
     // Listen for navigation or new requests triggered by clicking Google button
-    const [request] = await Promise.all([
+    const [, ] = await Promise.all([
       page.waitForEvent('request', {
         predicate: (req) => {
           const url = req.url()
@@ -81,7 +81,7 @@ test.describe('Google OAuth - Register Page', () => {
   test('clicking Google register button triggers OAuth', async ({ page }) => {
     const googleButton = page.getByRole('button', { name: /Google/ })
 
-    const [request] = await Promise.all([
+    const [, ] = await Promise.all([
       page.waitForEvent('request', {
         predicate: (req) => {
           const url = req.url()

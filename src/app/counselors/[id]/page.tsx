@@ -39,9 +39,16 @@ function findMockReviews(counselorId: string) {
   return mockReviews.filter((r) => r.counselor_id === counselorId)
 }
 
+import type { Counselor, Profile, Review } from "@/types/database"
+
+type CounselorRow = Counselor & { profiles?: Profile }
+type ReviewRow = Review & {
+  client?: { display_name?: string; full_name?: string } | null
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
-  let data: any = null
+  let data: CounselorRow | null = null
 
   try {
     const supabase = await createClient()
@@ -66,8 +73,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function CounselorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  let counselor: any = null
-  let reviews: any[] | null = null
+  let counselor: CounselorRow | null = null
+  let reviews: ReviewRow[] | null = null
 
   try {
     const supabase = await createClient()
@@ -188,7 +195,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                 <CardTitle>レビュー</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {reviews.map((review: any) => (
+                {reviews.map((review) => (
                   <div key={review.id}>
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex">
@@ -223,7 +230,7 @@ export default async function CounselorDetailPage({ params }: { params: Promise<
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
-                {reviews.map((review: any) => (
+                {reviews.map((review) => (
                   <ReviewCard
                     key={`axes-${review.id}`}
                     review={{

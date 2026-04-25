@@ -4,8 +4,17 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, CreditCard, Search } from "lucide-react"
+import { Calendar, Clock, Search } from "lucide-react"
 import { formatPrice, formatDate } from "@/lib/utils"
+
+type BookingRow = {
+  id: string
+  scheduled_at: string
+  duration_minutes: number
+  status: keyof typeof statusLabels
+  price: number
+  counselor?: { profiles?: { display_name?: string; full_name?: string } }
+}
 
 const statusLabels: Record<string, string> = {
   pending: "確認待ち",
@@ -99,7 +108,7 @@ export default async function ClientDashboardPage() {
         <CardContent>
           {upcomingBookings.length > 0 ? (
             <div className="space-y-4">
-              {upcomingBookings.map((booking: any) => (
+              {upcomingBookings.map((booking: BookingRow) => (
                 <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
                   <div>
                     <p className="font-medium text-gray-900">
@@ -128,7 +137,7 @@ export default async function ClientDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {pastBookings.map((booking: any) => (
+              {pastBookings.map((booking: BookingRow) => (
                 <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
                   <div>
                     <p className="font-medium text-gray-900">

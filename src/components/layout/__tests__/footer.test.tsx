@@ -1,20 +1,20 @@
 import { render, screen } from '@testing-library/react'
 import { Footer } from '../footer'
 
-// Mock next/link
+type AnyProps = Record<string, unknown>
+
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string } & AnyProps) =>
+    <a href={href} {...props}>{children}</a>,
 }))
 
-// Mock next/navigation
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
   usePathname: () => '/',
 }))
 
-// Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-  Heart: (props: any) => <svg data-testid="heart-icon" {...props} />,
+  Heart: (props: AnyProps) => <svg data-testid="heart-icon" {...props} />,
 }))
 
 describe('Footer', () => {
@@ -43,38 +43,48 @@ describe('Footer', () => {
   it('renders service links', () => {
     render(<Footer />)
     expect(screen.getByText('カウンセラーを探す')).toBeInTheDocument()
-    expect(screen.getByText('私たちについて')).toBeInTheDocument()
+    expect(screen.getByText('コラム')).toBeInTheDocument()
     expect(screen.getByText('カウンセラー登録')).toBeInTheDocument()
   })
 
-  it('renders legal section heading', () => {
+  it('renders 運営について section heading', () => {
     render(<Footer />)
-    expect(screen.getByText('法的情報')).toBeInTheDocument()
+    expect(screen.getByText('運営について')).toBeInTheDocument()
   })
 
-  it('renders legal links', () => {
+  it('renders legal & company links under 運営について', () => {
     render(<Footer />)
     expect(screen.getByText('利用規約')).toBeInTheDocument()
     expect(screen.getByText('プライバシーポリシー')).toBeInTheDocument()
     expect(screen.getByText('特定商取引法に基づく表記')).toBeInTheDocument()
+    expect(screen.getByText('私たちについて')).toBeInTheDocument()
+    expect(screen.getByText('選考基準')).toBeInTheDocument()
+  })
+
+  it('renders 無料ツール section with reflection tools', () => {
+    render(<Footer />)
+    expect(screen.getByText('無料ツール')).toBeInTheDocument()
+    expect(screen.getByText('パーソナリティ診断')).toBeInTheDocument()
+    expect(screen.getByText('タロット内省')).toBeInTheDocument()
+    expect(screen.getByText('相性診断')).toBeInTheDocument()
   })
 
   it('renders copyright with AICREO NEXT', () => {
     render(<Footer />)
     const currentYear = new Date().getFullYear()
     expect(
-      screen.getByText(`\u00A9 ${currentYear} 合同会社AICREO NEXT. All rights reserved.`)
+      screen.getByText(`© ${currentYear} 合同会社AICREO NEXT. All rights reserved.`)
     ).toBeInTheDocument()
   })
 
   it('has correct href links for service section', () => {
     render(<Footer />)
     const counselorsLink = screen.getByText('カウンセラーを探す').closest('a')
-    const aboutLink = screen.getByText('私たちについて').closest('a')
+    const columnLink = screen.getByText('コラム').closest('a')
     const forCounselorsLink = screen.getByText('カウンセラー登録').closest('a')
 
     expect(counselorsLink).toHaveAttribute('href', '/counselors')
-    expect(aboutLink).toHaveAttribute('href', '/about')
+    expect(columnLink).toHaveAttribute('href', '/column')
     expect(forCounselorsLink).toHaveAttribute('href', '/for-counselors')
   })
 

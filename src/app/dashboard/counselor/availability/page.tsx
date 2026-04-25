@@ -59,8 +59,9 @@ export default function CounselorAvailabilityPage() {
       const json = await res.json()
       if (!res.ok) setNotice({ type: "error", text: json.error || "保存に失敗しました" })
       else setNotice({ type: "success", text: "保存しました" })
-    } catch (err: any) {
-      setNotice({ type: "error", text: err?.message || "保存に失敗しました" })
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "保存に失敗しました"
+      setNotice({ type: "error", text: message })
     } finally { setSaving(false) }
   }
 

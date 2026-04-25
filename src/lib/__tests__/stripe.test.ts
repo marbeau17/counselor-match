@@ -5,7 +5,7 @@ class MockStripe {
 
 const mockStripeConstructor = vi.fn(function (this: MockStripe) {
   Object.assign(this, new MockStripe())
-} as unknown as ConstructorParameters<typeof import('stripe').default> extends infer P ? (...args: P extends any[] ? P : never) => void : never)
+} as unknown as (...args: unknown[]) => void)
 
 vi.mock('stripe', () => {
   return {

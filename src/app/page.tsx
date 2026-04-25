@@ -74,19 +74,19 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-emerald-950/40 dark:via-gray-950 dark:to-teal-950/40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700 mb-6">
               <Sparkles className="h-4 w-4" />
               Holistic × Spiritual Counseling
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 tracking-tight leading-tight">
               占いを超えた、
               <br className="sm:hidden" />
               <span className="text-emerald-600">魂のためのホリスティックカウンセリング</span>
             </h1>
-            <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+            <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
               心理学とスピリチュアルの統合で、本当の自分に還る場所。
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
@@ -102,7 +102,7 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-            <p className="mt-6 text-xs text-gray-500">
+            <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
               厳選されたカウンセラーによる、4層統合（身体・心・感情・魂）のアプローチ
             </p>
           </div>
@@ -110,7 +110,7 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((f, i) => (
@@ -119,8 +119,8 @@ export default function HomePage() {
                   <div className="mx-auto w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                     <f.icon className="h-6 w-6 text-emerald-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{f.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{f.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{f.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -129,11 +129,11 @@ export default function HomePage() {
       </section>
 
       {/* Methodologies strip */}
-      <section className="py-14 bg-gray-50 border-y border-gray-100">
+      <section className="py-14 bg-gray-50 border-y border-gray-100 dark:bg-gray-900 dark:border-gray-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900">Our Methodologies</h2>
-            <p className="mt-2 text-sm text-gray-500">3つの知の系譜を、ひとつの対話に統合します。</p>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Our Methodologies</h2>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">3つの知の系譜を、ひとつの対話に統合します。</p>
           </div>
           <div className="space-y-4">
             {(Object.keys(groups) as Array<keyof typeof groups>).map((key) => (
@@ -155,10 +155,10 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">ご利用の流れ</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">ご利用の流れ</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {steps.map((s, i) => (
@@ -167,8 +167,8 @@ export default function HomePage() {
                   <s.icon className="h-5 w-5 text-emerald-600" />
                 </div>
                 <div className="text-xs text-emerald-600 font-semibold mb-1">STEP {String(i + 1).padStart(2, "0")}</div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -176,11 +176,11 @@ export default function HomePage() {
       </section>
 
       {/* Free tools */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900">無料で試せるリフレクションツール</h2>
-            <p className="mt-3 text-sm text-gray-500">占いではなく、自分自身と対話するためのきっかけを。</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">無料で試せるリフレクションツール</h2>
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">占いではなく、自分自身と対話するためのきっかけを。</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {tools.map((t, i) => (
@@ -190,10 +190,10 @@ export default function HomePage() {
                     <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                       <t.icon className="h-5 w-5 text-emerald-600" />
                     </div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-2 group-hover:text-emerald-700">
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-emerald-700">
                       {t.title}
                     </h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{t.desc}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{t.desc}</p>
                   </CardContent>
                 </Card>
               </Link>

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { use } from "react"
 import Link from "next/link"
+import type { User } from "@supabase/supabase-js"
+import type { Counselor, Profile } from "@/types/database"
 import { createClient } from "@/lib/supabase/client"
 import { Avatar } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -33,12 +34,13 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
   const { id } = use(params)
   const router = useRouter()
 
-  const [counselor, setCounselor] = useState<any>(null)
+  type CounselorRow = Counselor & { profiles?: Profile | null }
+  const [counselor, setCounselor] = useState<CounselorRow | null>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   // Form state
   const [sessionType, setSessionType] = useState<string>("")
@@ -128,8 +130,9 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
       }
 
       setSuccess(true)
-    } catch (err: any) {
-      setError(err.message || "予約の作成に失敗しました。もう一度お試しください。")
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "予約の作成に失敗しました。もう一度お試しください。"
+      setError(message)
     } finally {
       setSubmitting(false)
     }

@@ -10,8 +10,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { CONCERNS, METHODOLOGIES, groupMethodologies } from '@/lib/taxonomy'
 import { mockCounselors } from '@/lib/mock-data'
+import type { Counselor, Profile } from '@/types/database'
 
-type CounselorRow = Record<string, any>
+type CounselorRow = Counselor & { profiles?: Profile } & Record<string, unknown>
 
 export default function CounselorsPage() {
   const [counselors, setCounselors] = useState<CounselorRow[]>(mockCounselors as CounselorRow[])
@@ -56,7 +57,7 @@ export default function CounselorsPage() {
     const kw = keyword.trim().toLowerCase()
     return counselors.filter((c) => {
       const name: string =
-        c?.profiles?.display_name || c?.profiles?.full_name || c?.display_name || ''
+        c?.profiles?.display_name || c?.profiles?.full_name || ''
       const bio: string = c?.bio || ''
       if (kw && !name.toLowerCase().includes(kw) && !bio.toLowerCase().includes(kw)) return false
 
@@ -249,7 +250,7 @@ export default function CounselorsPage() {
             </Card>
           ) : (
             filtered.map((counselor) => (
-              <CounselorCard key={counselor.id} counselor={counselor as any} />
+              <CounselorCard key={counselor.id} counselor={counselor} />
             ))
           )}
         </div>

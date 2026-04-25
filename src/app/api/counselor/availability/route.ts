@@ -43,7 +43,8 @@ export async function POST(request: Request) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true, counselor: updated })
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "error" }, { status: 500 })
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "error"
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
