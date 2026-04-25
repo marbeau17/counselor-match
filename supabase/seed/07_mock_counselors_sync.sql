@@ -1,18 +1,34 @@
 -- =============================================================================
--- Mock counselor IDs を Supabase に同期
+-- Mock counselor IDs を Supabase に同期 (v2: 既存と衝突する場合は cleanup)
+--
 -- src/lib/mock-data.ts で固定された 6 名の counselor を Supabase に upsert する。
 -- これで /counselors → /counselors/[id] → /booking/[id] → 予約成立 まで mock ID で完走可能になる。
 --
--- 注意:
--- - profiles の id は通常 auth.users.id を参照する（FK ON DELETE CASCADE）
--- - 本 seed は auth.users へも直接 INSERT して FK を満たす（demo 用、ログイン不可）
--- - パスワードは null（OAuth/匿名扱い）。実ログイン用には別途 06_test_users.sql を使用
+-- v2 変更点:
+-- - counselors.user_id の UNIQUE 制約衝突を回避するため、既存の mock メール
+--   アドレスを持つ profiles + 関連 counselors を先に削除
+-- - profiles の DELETE は CASCADE で auth.users と counselors を巻き込み消去
+-- - 既存の bookings/payments/reviews も CASCADE で消える（新規環境前提、テストデータのみのため許容）
 -- =============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- -----------------------------------------------------------------------------
--- auth.users (FK 充足のため、ログイン不可ダミー)
+-- Step 0: 既存の mock メールアドレスを持つレコードを cleanup
+-- -----------------------------------------------------------------------------
+-- profiles を削除 → CASCADE で counselors も削除（FK ON DELETE CASCADE 想定）
+-- ただし auth.users → profiles の方向の CASCADE なので、auth.users から削除する
+DELETE FROM auth.users WHERE email IN (
+  'misaki.tanaka@example.com',
+  'kenta.suzuki@example.com',
+  'akari.yamamoto@example.com',
+  'ryuichi.sato@example.com',
+  'ayaka.nakamura@example.com',
+  'yamato.ito@example.com'
+);
+
+-- -----------------------------------------------------------------------------
+-- Step 1: auth.users (FK 充足のためダミー作成、ログイン不可)
 -- -----------------------------------------------------------------------------
 INSERT INTO auth.users (instance_id, id, aud, role, email, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, is_super_admin, is_sso_user)
 VALUES
@@ -21,11 +37,10 @@ VALUES
   ('00000000-0000-0000-0000-000000000000', 'c0000000-0000-0000-0000-000000000003'::uuid, 'authenticated', 'authenticated', 'akari.yamamoto@example.com', '{}'::jsonb, jsonb_build_object('full_name','山本あかり'), NOW(), NOW(), false, false),
   ('00000000-0000-0000-0000-000000000000', 'c0000000-0000-0000-0000-000000000004'::uuid, 'authenticated', 'authenticated', 'ryuichi.sato@example.com',   '{}'::jsonb, jsonb_build_object('full_name','佐藤龍一'),   NOW(), NOW(), false, false),
   ('00000000-0000-0000-0000-000000000000', 'c0000000-0000-0000-0000-000000000005'::uuid, 'authenticated', 'authenticated', 'ayaka.nakamura@example.com', '{}'::jsonb, jsonb_build_object('full_name','中村彩花'),   NOW(), NOW(), false, false),
-  ('00000000-0000-0000-0000-000000000000', 'c0000000-0000-0000-0000-000000000006'::uuid, 'authenticated', 'authenticated', 'yamato.ito@example.com',     '{}'::jsonb, jsonb_build_object('full_name','伊藤大和'),   NOW(), NOW(), false, false)
-ON CONFLICT (id) DO NOTHING;
+  ('00000000-0000-0000-0000-000000000000', 'c0000000-0000-0000-0000-000000000006'::uuid, 'authenticated', 'authenticated', 'yamato.ito@example.com',     '{}'::jsonb, jsonb_build_object('full_name','伊藤大和'),   NOW(), NOW(), false, false);
 
 -- -----------------------------------------------------------------------------
--- profiles
+-- Step 2: profiles
 -- -----------------------------------------------------------------------------
 INSERT INTO profiles (id, email, full_name, display_name, avatar_url, role, phone)
 VALUES
@@ -44,7 +59,7 @@ ON CONFLICT (id) DO UPDATE SET
   updated_at = NOW();
 
 -- -----------------------------------------------------------------------------
--- counselors (6 名)
+-- Step 3: counselors (6 名)
 -- -----------------------------------------------------------------------------
 INSERT INTO counselors (
   id, user_id, level, title, bio, specialties, certifications, hourly_rate,
@@ -112,29 +127,10 @@ VALUES
     5000, true, 4.3, 18, 62,
     ARRAY['numerology','personality_matrix_32','tarot'],
     ARRAY['online','chat']::session_type[], 0.20,
-    ARRAY['self_understanding','life_purpose'], 'accepting_bookings', false, NULL, 'approved')
-ON CONFLICT (id) DO UPDATE SET
-  level = EXCLUDED.level,
-  title = EXCLUDED.title,
-  bio = EXCLUDED.bio,
-  specialties = EXCLUDED.specialties,
-  certifications = EXCLUDED.certifications,
-  hourly_rate = EXCLUDED.hourly_rate,
-  is_active = EXCLUDED.is_active,
-  rating_average = EXCLUDED.rating_average,
-  rating_count = EXCLUDED.rating_count,
-  session_count = EXCLUDED.session_count,
-  methodology = EXCLUDED.methodology,
-  available_session_types = EXCLUDED.available_session_types,
-  commission_rate = EXCLUDED.commission_rate,
-  concerns = EXCLUDED.concerns,
-  availability_mode = EXCLUDED.availability_mode,
-  on_demand_enabled = EXCLUDED.on_demand_enabled,
-  price_per_minute = EXCLUDED.price_per_minute,
-  screening_status = EXCLUDED.screening_status,
-  updated_at = NOW();
+    ARRAY['self_understanding','life_purpose'], 'accepting_bookings', false, NULL, 'approved');
 
 -- -----------------------------------------------------------------------------
 -- 確認
 -- -----------------------------------------------------------------------------
 -- SELECT id, level, hourly_rate, availability_mode FROM counselors WHERE id LIKE 'c0000000%';
+-- SELECT id, full_name FROM profiles WHERE email LIKE '%@example.com' ORDER BY email;
