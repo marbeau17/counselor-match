@@ -115,25 +115,42 @@ export function Header({ user }: HeaderProps) {
                     <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
                       <Link
                         href="/dashboard"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         ダッシュボード
                       </Link>
                       <Link
                         href="/dashboard/journey"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         わたしの旅路
                       </Link>
                       <Link
+                        href="/dashboard/journal"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        ジャーナル
+                      </Link>
+                      <Link
                         href="/dashboard/wallet"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         ウォレット
                       </Link>
+                      <div className="border-t border-gray-100 dark:border-gray-800 my-1" />
+                      <form action="/api/auth/signout" method="POST">
+                        <button
+                          type="submit"
+                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          ログアウト
+                        </button>
+                      </form>
                     </div>
                   </div>
                 )}
@@ -212,9 +229,21 @@ export function Header({ user }: HeaderProps) {
                 <Link href="/dashboard/journey" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
                   わたしの旅路
                 </Link>
+                <Link href="/dashboard/journal" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                  ジャーナル
+                </Link>
                 <Link href="/dashboard/wallet" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
                   ウォレット
                 </Link>
+                <form action="/api/auth/signout" method="POST">
+                  <button
+                    type="submit"
+                    className="block w-full text-left py-2 text-base font-medium text-red-600 hover:text-red-700"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    ログアウト
+                  </button>
+                </form>
               </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2">
