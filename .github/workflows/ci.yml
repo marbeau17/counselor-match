@@ -78,6 +78,23 @@ jobs:
       - name: Apply migrations + seeds
         run: supabase db reset
 
+      - name: Verify seed application + re-apply if needed
+        run: |
+          DB_NAME=$(docker ps --format '{{.Names}}' | grep '^supabase_db_' | head -1)
+          BOOKINGS=$(docker exec "$DB_NAME" psql -U postgres -At -c "SELECT count(*) FROM bookings WHERE id::text LIKE 'b0000000%';")
+          REVIEWS=$(docker exec "$DB_NAME" psql -U postgres -At -c "SELECT count(*) FROM reviews WHERE id::text LIKE 'f0000000%';")
+          echo "bookings (b0000000-*): $BOOKINGS / 18"
+          echo "reviews  (f0000000-*): $REVIEWS / 6"
+          if [ "$BOOKINGS" != "18" ]; then
+            echo "Re-applying 03_bookings.sql..."
+            docker exec -i "$DB_NAME" psql -U postgres < supabase/seed/03_bookings.sql
+          fi
+          if [ "$REVIEWS" != "6" ]; then
+            echo "Re-applying 04_payments.sql + 05_reviews.sql..."
+            docker exec -i "$DB_NAME" psql -U postgres < supabase/seed/04_payments.sql
+            docker exec -i "$DB_NAME" psql -U postgres < supabase/seed/05_reviews.sql
+          fi
+
       - name: Configure .env.local for Next.js
         run: |
           API_URL=$(supabase status -o env | grep '^API_URL=' | cut -d'=' -f2 | tr -d '"')
