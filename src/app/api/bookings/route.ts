@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createClient as createServerClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js"
 import { getStripeOptional } from "@/lib/stripe"
+import { generateMeetingUrl } from "@/lib/video"
 
 // payments テーブルは RLS で書込ポリシーなし → service_role 経由で INSERT
 function getAdminClient() {
@@ -62,8 +63,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to create booking" }, { status: 500 })
     }
 
-    // payments insert は admin client (service_role) で実行（RLS bypass）
+    // session_type が online の予約には Jitsi meeting URL を生成して保存
     const admin = getAdminClient()
+    if (session_type === "online" && admin) {
+      const meetingUrl = generateMeetingUrl(booking.id)
+      const { data: updated } = await admin
+        .from("bookings")
+        .update({ meeting_url: meetingUrl })
+        .eq("id", booking.id)
+        .select()
+        .single()
+      if (updated) booking.meeting_url = updated.meeting_url
+    }
+
+    // payments insert は admin client (service_role) で実行（RLS bypass）
     if (admin) {
       const { error: paymentError } = await admin
         .from("payments")

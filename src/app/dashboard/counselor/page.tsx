@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +13,8 @@ type BookingRow = {
   duration_minutes: number
   status: string
   notes?: string
+  session_type?: string
+  meeting_url?: string | null
   client?: { display_name?: string; full_name?: string }
 }
 
@@ -149,10 +152,17 @@ export default async function CounselorDashboardPage() {
                     <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.client?.display_name || booking.client?.full_name || "クライアント"}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
                     {booking.notes && <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{booking.notes}</p>}
                   </div>
-                  <Badge variant="default">確定</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default">確定</Badge>
+                    {booking.session_type === "online" && booking.meeting_url && (
+                      <Link href={`/session/${booking.id}`}>
+                        <Button size="sm">セッション参加</Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

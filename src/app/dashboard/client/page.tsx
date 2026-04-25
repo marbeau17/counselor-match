@@ -13,6 +13,8 @@ type BookingRow = {
   duration_minutes: number
   status: keyof typeof statusLabels
   price: number
+  session_type?: string
+  meeting_url?: string | null
   counselor?: { profiles?: { display_name?: string; full_name?: string } }
 }
 
@@ -114,11 +116,16 @@ export default async function ClientDashboardPage() {
                     <p className="font-medium text-gray-900 dark:text-gray-100">
                       {booking.counselor?.profiles?.display_name || booking.counselor?.profiles?.full_name || "カウンセラー"}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(booking.scheduled_at)} · {booking.duration_minutes}分</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge variant={statusVariants[booking.status]}>{statusLabels[booking.status]}</Badge>
                     <span className="text-sm font-medium">{formatPrice(booking.price)}</span>
+                    {booking.session_type === "online" && booking.meeting_url && (
+                      <Link href={`/session/${booking.id}`}>
+                        <Button size="sm">セッション参加</Button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}
