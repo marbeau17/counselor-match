@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { NotificationBell } from "@/components/notifications/notification-bell"
 
 interface HeaderProps {
-  user?: { email: string; full_name?: string } | null
+  user?: { email: string; full_name?: string; role?: string | null } | null
 }
 
 export function Header({ user }: HeaderProps) {
@@ -111,7 +111,7 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 </button>
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full pt-2 w-48">
+                  <div className="absolute right-0 top-full pt-2 w-56">
                     <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
                       <Link
                         href="/dashboard"
@@ -120,6 +120,40 @@ export function Header({ user }: HeaderProps) {
                       >
                         ダッシュボード
                       </Link>
+                      {user.role === "admin" && (
+                        <Link
+                          href="/dashboard/admin"
+                          className="block px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 hover:text-purple-800 dark:text-purple-300 dark:hover:bg-purple-950 font-medium"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          管理者ダッシュボード
+                        </Link>
+                      )}
+                      {user.role === "counselor" && (
+                        <>
+                          <Link
+                            href="/dashboard/counselor"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            カウンセラー画面
+                          </Link>
+                          <Link
+                            href="/dashboard/counselor/profile"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            プロフィール編集
+                          </Link>
+                          <Link
+                            href="/dashboard/counselor/availability"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            受付状態
+                          </Link>
+                        </>
+                      )}
                       <Link
                         href="/dashboard/journey"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-emerald-400"
@@ -226,6 +260,21 @@ export function Header({ user }: HeaderProps) {
                 <Link href="/dashboard" className="block py-2 text-base font-medium text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
                   ダッシュボード
                 </Link>
+                {user.role === "admin" && (
+                  <Link href="/dashboard/admin" className="block py-2 text-base font-medium text-purple-700 dark:text-purple-300" onClick={() => setMobileMenuOpen(false)}>
+                    管理者ダッシュボード
+                  </Link>
+                )}
+                {user.role === "counselor" && (
+                  <>
+                    <Link href="/dashboard/counselor" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                      カウンセラー画面
+                    </Link>
+                    <Link href="/dashboard/counselor/profile" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
+                      プロフィール編集
+                    </Link>
+                  </>
+                )}
                 <Link href="/dashboard/journey" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
                   わたしの旅路
                 </Link>

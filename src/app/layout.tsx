@@ -27,11 +27,20 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   let user = null
+  let role: string | null = null
   try {
     const supabase = await createClient()
     if (supabase) {
       const { data } = await supabase.auth.getUser()
       user = data.user
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single()
+        role = (profile?.role as string | undefined) ?? null
+      }
     }
   } catch {
     // Supabase 未設定または通信エラーは匿名ユーザー扱い
@@ -52,7 +61,7 @@ export default async function RootLayout({
       >
         <div className="flex min-h-screen flex-col">
           <Header
-            user={user ? { email: user.email ?? "", full_name: user.user_metadata?.full_name } : null}
+            user={user ? { email: user.email ?? "", full_name: user.user_metadata?.full_name, role } : null}
           />
           <main className="flex-1">{children}</main>
           <Footer />
