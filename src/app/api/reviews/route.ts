@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createAdmin } from "@supabase/supabase-js"
+import { notify } from "@/lib/notifications"
 
 const ALLOWED_AXES = ["insight", "empathy", "practicality", "approachability", "awareness"] as const
 type Axis = typeof ALLOWED_AXES[number]
@@ -102,6 +103,24 @@ export async function POST(request: NextRequest) {
             rating_count: ratings.length,
           })
           .eq("id", booking.counselor_id)
+      }
+    }
+
+    // counselor (user_id) を取得して通知送信
+    if (admin) {
+      const { data: counselor } = await admin
+        .from("counselors")
+        .select("user_id")
+        .eq("id", booking.counselor_id)
+        .single()
+      if (counselor?.user_id) {
+        notify({
+          userId: counselor.user_id,
+          type: "review_received",
+          title: "新しいレビューを受領しました",
+          body: `★${rating} のレビューが投稿されました`,
+          url: "/dashboard/counselor",
+        }).catch(() => {})
       }
     }
 

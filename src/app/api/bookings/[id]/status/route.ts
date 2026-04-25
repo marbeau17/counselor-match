@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient as createServerClient } from "@/lib/supabase/server"
 import { createClient as createAdmin } from "@supabase/supabase-js"
+import { notify } from "@/lib/notifications"
 import type { BookingStatus } from "@/types/database"
 
 const ALLOWED_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
@@ -82,6 +83,24 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     if (updErr) {
       console.error("[bookings/status] update error", updErr)
       return NextResponse.json({ error: "Failed to update" }, { status: 500 })
+    }
+
+    // 状態変更通知 (相手側に飛ばす)
+    const targetUserId = newStatus === "cancelled"
+      ? (isClient ? counselor?.user_id : booking.client_id)
+      : booking.client_id  // confirmed / completed は client へ
+    if (targetUserId) {
+      const titleMap: Record<string, string> = {
+        confirmed: "予約が承認されました",
+        cancelled: "予約がキャンセルされました",
+        completed: "セッションが完了しました",
+      }
+      notify({
+        userId: targetUserId,
+        type: `booking_${newStatus}`,
+        title: titleMap[newStatus] || "予約が更新されました",
+        url: isClient ? "/dashboard/client" : "/dashboard/counselor",
+      }).catch(() => {})
     }
 
     return NextResponse.json({ booking: updated })

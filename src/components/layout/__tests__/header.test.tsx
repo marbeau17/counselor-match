@@ -19,6 +19,12 @@ vi.mock('lucide-react', () => ({
   Menu: (props: AnyProps) => <svg data-testid="menu-icon" {...props} />,
   X: (props: AnyProps) => <svg data-testid="x-icon" {...props} />,
   ChevronDown: (props: AnyProps) => <svg data-testid="chevron-down-icon" {...props} />,
+  Bell: (props: AnyProps) => <svg data-testid="bell-icon" {...props} />,
+}))
+
+// NotificationBell は Supabase client を呼ぶので test 環境では stub
+vi.mock('@/components/notifications/notification-bell', () => ({
+  NotificationBell: () => <div data-testid="notification-bell-stub" />,
 }))
 
 describe('Header', () => {

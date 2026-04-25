@@ -4,6 +4,7 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js"
 import { getStripeOptional } from "@/lib/stripe"
 import { generateMeetingUrl } from "@/lib/video"
 import { sendBookingConfirmation, sendBookingNotificationToCounselor } from "@/lib/email"
+import { notify } from "@/lib/notifications"
 
 // payments テーブルは RLS で書込ポリシーなし → service_role 経由で INSERT
 function getAdminClient() {
@@ -159,6 +160,15 @@ export async function POST(request: NextRequest) {
           clientProfile?.display_name ||
           clientProfile?.full_name ||
           "クライアント"
+
+        // in-app 通知 (fire and forget)
+        notify({
+          userId: counselor.user_id,
+          type: "booking_created",
+          title: "新しい予約リクエスト",
+          body: `${clientProfile?.display_name || clientProfile?.full_name || "クライアント"}さんから ${new Date(scheduled_at).toLocaleString("ja-JP")} の予約リクエストがあります`,
+          url: "/dashboard/counselor",
+        }).catch(() => {})
 
         // 並列送信、失敗しても booking は成立扱い
         await Promise.allSettled([

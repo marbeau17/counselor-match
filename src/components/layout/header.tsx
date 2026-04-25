@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { Menu, X, Heart, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { NotificationBell } from "@/components/notifications/notification-bell"
 
 interface HeaderProps {
   user?: { email: string; full_name?: string } | null
@@ -88,6 +89,8 @@ export function Header({ user }: HeaderProps) {
             </Link>
 
             {user ? (
+              <>
+              <NotificationBell />
               <div
                 className="relative"
                 onMouseEnter={() => setUserMenuOpen(true)}
@@ -135,6 +138,7 @@ export function Header({ user }: HeaderProps) {
                   </div>
                 )}
               </div>
+              </>
             ) : (
               <div className="flex items-center gap-3">
                 <Link href="/login">
