@@ -237,8 +237,9 @@ export async function syncSectionImageUses(sectionId: string, props: Record<stri
 // 外国人顔写真を排除し、日本の生活文化 (和室・茶・墨・和紙・自然) で構成
 // spec: docs/lp_redesign_spec.md §4.3 / 2026-04-26 日本人向け改訂
 const IMG = {
-  // Hero: 障子から差す柔らかい光のある和室空間 (人物なし、editorial)
-  hero_portrait: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1000&q=80&auto=format&fit=crop",
+  // Hero: Gemini Banana Pro 生成の Kanojo-kan (彼女感) 日本人女性ポートレート
+  // (障子のある和モダンな室内、自然光、クリーム色のケーブルニット、湯気の立つマグカップ)
+  hero_portrait: "https://ochflwclsjspmmpsutuf.supabase.co/storage/v1/object/public/public-images/hero/edd7d2ca-1c10-4861-9f28-a44c7483cc89.jpg",
   // Approach: 手・茶・紙の暖かいクローズアップ (顔写らず)
   feature_listen: "https://images.unsplash.com/photo-1545048702-79362596cdc9?w=800&q=80&auto=format&fit=crop", // 和茶碗を持つ手
   feature_mirror: "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?w=800&q=80&auto=format&fit=crop", // 水面の反射
@@ -284,7 +285,7 @@ const DEFAULT_HOME_SECTIONS: ResolvedSection[] = [
       sub_cta_label: "まずは無料で診断してみる",
       sub_cta_url: "/tools/personality",
       photo_url: IMG.hero_portrait,
-      photo_alt: "窓辺で本を読む人物",
+      photo_alt: "障子越しの朝の光と、ゆっくり湯気を見つめる人の手元",
     },
   },
   {
