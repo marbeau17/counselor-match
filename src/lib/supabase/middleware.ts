@@ -38,12 +38,18 @@ export async function updateSession(request: NextRequest) {
 
   // 認証が必要な領域（dashboard / 認証済み API）のみ保護。それ以外は全て public。
   const pathname = request.nextUrl.pathname
-  const isProtected =
+  // 例外: 内部 API で SUPABASE_SERVICE_ROLE_KEY による独自トークン認証を使うエンドポイント
+  const apiAllowList = [
+    '/api/admin/landing/generate-hero-once',
+  ]
+  const isApiAllowed = apiAllowList.some((p) => pathname === p || pathname.startsWith(p + '/'))
+  const isProtected = !isApiAllowed && (
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/session') ||
     pathname.startsWith('/api/admin') ||
     pathname.startsWith('/api/counselor') ||
     pathname.startsWith('/api/wallet')
+  )
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone()
