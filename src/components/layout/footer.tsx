@@ -24,7 +24,7 @@ export function Footer() {
               ホリスティック心理学に根ざした、伴走型のオンラインカウンセリング・マッチング。
               急かされない場所で、ゆっくり聴いてくれる人と出会うために。
             </p>
-            <p className="font-accent italic text-sm text-accent-primary mt-5">
+            <p lang="en" className="font-accent italic text-sm text-accent-primary mt-5">
               — Holistic Counseling for everyday self-care
             </p>
           </div>
@@ -35,10 +35,10 @@ export function Footer() {
               セッション
             </h3>
             <ul className="space-y-2.5">
-              <li><Link href="/counselors" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">カウンセラーを探す</Link></li>
-              <li><Link href="/counselors?level=master" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">マスター認定の伴走者</Link></li>
-              <li><Link href="/counselors?availability=machiuke" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">いま話せる人</Link></li>
-              <li><Link href="/about/screening" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">選考基準</Link></li>
+              <li><Link href="/counselors" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">カウンセラーを探す</Link></li>
+              <li><Link href="/counselors?level=master" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">マスター認定の伴走者</Link></li>
+              <li><Link href="/counselors?availability=machiuke" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">いま話せる人</Link></li>
+              <li><Link href="/about/screening" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">選考基準</Link></li>
             </ul>
           </nav>
 
@@ -48,10 +48,10 @@ export function Footer() {
               内省ツール
             </h3>
             <ul className="space-y-2.5">
-              <li><Link href="/tools/personality" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">パーソナリティ診断</Link></li>
-              <li><Link href="/tools/tarot" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">タロット・リフレクション</Link></li>
-              <li><Link href="/tools/compatibility" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">相性診断</Link></li>
-              <li><Link href="/column" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">コラム・マガジン</Link></li>
+              <li><Link href="/tools/personality" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">パーソナリティ診断</Link></li>
+              <li><Link href="/tools/tarot" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">タロット・リフレクション</Link></li>
+              <li><Link href="/tools/compatibility" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">相性診断</Link></li>
+              <li><Link href="/column" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">コラム・マガジン</Link></li>
             </ul>
           </nav>
 
@@ -61,10 +61,10 @@ export function Footer() {
               アカウント
             </h3>
             <ul className="space-y-2.5">
-              <li><Link href="/login" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">ログイン</Link></li>
-              <li><Link href="/register" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">新規登録</Link></li>
-              <li><Link href="/forgot-password" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">パスワードを忘れた</Link></li>
-              <li><Link href="/for-counselors" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">カウンセラーとして登録</Link></li>
+              <li><Link href="/login" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">ログイン</Link></li>
+              <li><Link href="/register" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">新規登録</Link></li>
+              <li><Link href="/forgot-password" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">パスワードを忘れた</Link></li>
+              <li><Link href="/for-counselors" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">カウンセラーとして登録</Link></li>
             </ul>
           </nav>
 
@@ -74,10 +74,10 @@ export function Footer() {
               運営について
             </h3>
             <ul className="space-y-2.5">
-              <li><Link href="/about" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">私たちについて</Link></li>
-              <li><Link href="/terms" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">利用規約</Link></li>
-              <li><Link href="/privacy" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">プライバシーポリシー</Link></li>
-              <li><Link href="/commercial" className="text-sm text-secondary hover:text-accent-primary dark:text-gray-400 transition-colors">特定商取引法に基づく表記</Link></li>
+              <li><Link href="/about" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">私たちについて</Link></li>
+              <li><Link href="/terms" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">利用規約</Link></li>
+              <li><Link href="/privacy" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">プライバシーポリシー</Link></li>
+              <li><Link href="/commercial" className="text-sm text-secondary hover:text-accent-primary focus-visible:text-accent-primary focus-visible:underline underline-offset-2 dark:text-gray-400 transition-colors">特定商取引法に基づく表記</Link></li>
             </ul>
           </nav>
         </div>
@@ -86,7 +86,7 @@ export function Footer() {
           <p className="text-xs text-muted dark:text-gray-500">
             &copy; {new Date().getFullYear()} 合同会社AICREO NEXT. All rights reserved.
           </p>
-          <p className="text-xs text-muted dark:text-gray-500 font-accent italic">
+          <p lang="en" className="text-xs text-muted dark:text-gray-500 font-accent italic">
             Made with care in Japan
           </p>
         </div>

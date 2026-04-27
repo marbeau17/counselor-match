@@ -41,6 +41,8 @@
 body {
   font-family: var(--font-sans, system-ui, sans-serif);
   font-feature-settings: "palt";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ヒエラルキー: 見出しは serif */
@@ -82,4 +84,65 @@ html.dark body {
 }
 .animate-slow-zoom {
   animation: slowZoom 8s ease-out both;
+}
+
+/* Universal focus-visible (a11y safety net) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  /* 一部 UI が独自 ring を持つ場合は上書き可能 */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible,
+  [role="link"]:focus-visible {
+    outline-color: var(--color-accent-primary);
+  }
+}
+
+/* prefers-reduced-motion 対応 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-fadein,
+  .animate-slow-zoom,
+  .animate-marquee {
+    animation: none !important;
+  }
+}
+
+/* sr-only utility (Tailwind の sr-only と互換) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.focus-visible\:not-sr-only:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Heading anchor scroll-margin (in-page links) */
+h1, h2, h3, h4 {
+  scroll-margin-top: 5rem;
 }

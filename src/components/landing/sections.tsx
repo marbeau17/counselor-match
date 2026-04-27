@@ -221,7 +221,7 @@ export function FeaturesSection({ props }: { props: AnyProps }) {
                   <Image src={it.image_url} alt={it.title ?? ""} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                 </div>
               )}
-              <p className="font-accent text-sm text-accent-primary mb-2 tracking-wider">
+              <p aria-hidden="true" className="font-accent text-sm text-accent-primary mb-2 tracking-wider">
                 {String(i + 1).padStart(2, "0")}
               </p>
               <h3 className="font-serif text-xl sm:text-2xl text-primary dark:text-gray-100 mb-3 font-medium leading-snug">
@@ -274,6 +274,7 @@ export function HowItWorksSection({ props }: { props: AnyProps }) {
                 Step {String(it.step ?? i + 1).padStart(2, "0")}
               </p>
               <h3 className="mt-2 font-serif text-lg text-primary dark:text-gray-100 font-medium leading-snug">
+                <span className="sr-only">手順 {it.step ?? i + 1}: </span>
                 {it.title}
               </h3>
               <p className="mt-3 text-sm text-secondary dark:text-gray-400 leading-loose">
@@ -316,7 +317,7 @@ export async function CounselorShowcaseSection({ props }: { props: AnyProps }) {
   return (
     <section className="py-20 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
+        <h2 className="font-serif text-3xl sm:text-4xl text-center text-primary dark:text-gray-100 mb-12 font-medium leading-snug">
           注目のカウンセラー
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -451,7 +452,7 @@ export function PricingSection({ props }: { props: AnyProps }) {
   return (
     <section className="py-20 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">料金プラン</h2>
+        <h2 className="font-serif text-3xl sm:text-4xl text-center text-primary dark:text-gray-100 mb-12 font-medium leading-snug">料金プラン</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((p, i) => (
             <Card key={i} className={p.highlight ? "ring-2 ring-emerald-500" : ""}>
@@ -484,11 +485,11 @@ export function FaqSection({ props }: { props: AnyProps }) {
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-10">よくあるご質問</h2>
+        <h2 className="font-serif text-3xl sm:text-4xl text-center text-primary dark:text-gray-100 mb-10 font-medium leading-snug">よくあるご質問</h2>
         <div className="space-y-3">
           {items.map((it, i) => (
-            <details key={i} className="group bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-              <summary className="cursor-pointer font-medium text-gray-900 dark:text-gray-100">Q. {it.q}</summary>
+            <details key={i} className="group bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 p-4 focus-within:ring-2 focus-within:ring-accent-primary/30">
+              <summary className="cursor-pointer font-medium text-gray-900 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 rounded">Q. {it.q}</summary>
               <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">A. {it.a}</p>
             </details>
           ))}

@@ -161,6 +161,9 @@ export default async function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <head>
+        {/* テーマカラー (モバイルブラウザのアドレスバー / PWA 用) */}
+        <meta name="theme-color" content="#FAF7F2" />
+        <meta name="theme-color" content="#1A1714" media="(prefers-color-scheme: dark)" />
         {/* OS のダーク設定 or localStorage("theme") を読み、初回描画前に <html class="dark"> を確定 */}
         <script
           dangerouslySetInnerHTML={{
@@ -180,11 +183,18 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${notoSerifJP.variable} ${cormorant.variable} antialiased bg-base text-primary dark:bg-gray-950 dark:text-gray-100`}
       >
+        {/* a11y: メインコンテンツへのスキップリンク (キーボードフォーカス時のみ表示) */}
+        <a
+          href="#main-content"
+          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:bg-accent-primary focus-visible:text-white focus-visible:px-4 focus-visible:py-2 focus-visible:rounded focus-visible:shadow-lg"
+        >
+          メインコンテンツへスキップ
+        </a>
         <div className="flex min-h-screen flex-col">
           <Header
             user={user ? { email: user.email ?? "", full_name: user.user_metadata?.full_name, role } : null}
           />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
           <Footer />
         </div>
       </body>

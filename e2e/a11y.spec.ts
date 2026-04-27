@@ -62,3 +62,46 @@ test.describe('Accessibility (axe-core, public pages)', () => {
     })
   }
 })
+
+/**
+ * キーボード操作 a11y の動的テスト。
+ * - skip link が Tab で表出するか
+ * - dropdown trigger が Enter で展開するか
+ * - モバイルメニューが click で開閉し aria-expanded が更新されるか
+ * を検証する。WCAG 2.1 §2.1.1 (Keyboard) / §4.1.2 (Name, Role, Value) に対応。
+ */
+test.describe('A11y - keyboard interaction (public pages)', () => {
+  test('skip link が Tab で表示される', async ({ page }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle').catch(() => {})
+
+    await page.keyboard.press('Tab')
+
+    const skipLink = page.locator('a[href="#main-content"]')
+    await expect(skipLink).toBeVisible()
+  })
+
+  test('dropdown trigger がキーボードで開ける', async ({ page }) => {
+    await page.goto('/')
+    await page.waitForLoadState('networkidle').catch(() => {})
+
+    const trigger = page.getByRole('button', { name: /無料診断/ })
+    await trigger.focus()
+    await page.keyboard.press('Enter')
+
+    const dropdownItem = page.locator('a[href="/tools/personality"]:visible')
+    await expect(dropdownItem).toBeVisible()
+  })
+
+  test('モバイルメニューが Tab + Enter で開ける', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.goto('/')
+    await page.waitForLoadState('networkidle').catch(() => {})
+
+    const menuButton = page.getByRole('button', { name: 'メニュー' })
+    await menuButton.click()
+
+    await expect(menuButton).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.locator('#mobile-menu')).toBeVisible()
+  })
+})

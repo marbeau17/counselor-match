@@ -38,6 +38,9 @@ export function Header({ user }: HeaderProps) {
               className="relative"
               onMouseEnter={() => setToolsOpen(true)}
               onMouseLeave={() => setToolsOpen(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setToolsOpen(false)
+              }}
             >
               <button
                 type="button"
@@ -45,12 +48,13 @@ export function Header({ user }: HeaderProps) {
                 onClick={() => setToolsOpen(!toolsOpen)}
                 aria-haspopup="true"
                 aria-expanded={toolsOpen}
+                aria-controls="desktop-tools-menu"
               >
                 無料診断
                 <ChevronDown className="h-4 w-4" />
               </button>
               {toolsOpen && (
-                <div className="absolute left-0 top-full pt-2 w-56">
+                <div id="desktop-tools-menu" className="absolute left-0 top-full pt-2 w-56">
                   <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
                     <Link
                       href="/tools/personality"
@@ -95,6 +99,9 @@ export function Header({ user }: HeaderProps) {
                 className="relative"
                 onMouseEnter={() => setUserMenuOpen(true)}
                 onMouseLeave={() => setUserMenuOpen(false)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setUserMenuOpen(false)
+                }}
               >
                 <Button
                   variant="outline"
@@ -103,12 +110,13 @@ export function Header({ user }: HeaderProps) {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
+                  aria-controls="desktop-user-menu"
                 >
                   ダッシュボード
                   <ChevronDown className="h-4 w-4" />
                 </Button>
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full pt-2 w-56">
+                  <div id="desktop-user-menu" className="absolute right-0 top-full pt-2 w-56">
                     <div className="rounded-md border border-gray-200 bg-white shadow-lg py-1 dark:border-gray-700 dark:bg-gray-900">
                       <Link
                         href="/dashboard"
@@ -203,6 +211,8 @@ export function Header({ user }: HeaderProps) {
             className="md:hidden p-2 text-gray-600"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="メニュー"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -211,7 +221,7 @@ export function Header({ user }: HeaderProps) {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
+        <div id="mobile-menu" className="md:hidden border-t border-gray-200 bg-white">
           <div className="space-y-1 px-4 py-4">
             <Link href="/counselors" className="block py-2 text-base font-medium text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
               カウンセラー
@@ -223,12 +233,16 @@ export function Header({ user }: HeaderProps) {
               className="flex w-full items-center justify-between py-2 text-base font-medium text-gray-600 hover:text-emerald-600"
               onClick={() => setMobileToolsOpen(!mobileToolsOpen)}
               aria-expanded={mobileToolsOpen}
+              aria-controls="mobile-tools-menu"
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setMobileToolsOpen(false)
+              }}
             >
               <span>無料診断</span>
               <ChevronDown className={`h-4 w-4 transition-transform ${mobileToolsOpen ? "rotate-180" : ""}`} />
             </button>
             {mobileToolsOpen && (
-              <div className="pl-4 space-y-1">
+              <div id="mobile-tools-menu" className="pl-4 space-y-1">
                 <Link href="/tools/personality" className="block py-2 text-sm text-gray-600 hover:text-emerald-600" onClick={() => setMobileMenuOpen(false)}>
                   パーソナリティ診断
                 </Link>

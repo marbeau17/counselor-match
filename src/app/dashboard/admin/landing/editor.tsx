@@ -101,6 +101,18 @@ export function LandingEditor({
     }).then((r) => r.json()).then((j) => setPreviewToken(j.token))
   }, [])
 
+  // モーダルの Esc キーでの閉鎖対応 (a11y)
+  useEffect(() => {
+    if (!addOpen && !historyOpen) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return
+      if (addOpen) setAddOpen(false)
+      if (historyOpen) setHistoryOpen(false)
+    }
+    document.addEventListener("keydown", onKeyDown)
+    return () => document.removeEventListener("keydown", onKeyDown)
+  }, [addOpen, historyOpen])
+
   // draft 編集 → debounce 500ms → API PATCH → iframe reload
   const draftDebounce = useRef<NodeJS.Timeout | null>(null)
   const updateDraft = (id: string, draft_props: Record<string, unknown>) => {
@@ -283,7 +295,7 @@ export function LandingEditor({
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">ページ全体の SEO 設定 (`{pageSeo.page_key}`)</h3>
-              <Button size="sm" variant="ghost" onClick={() => setPageSeoOpen(false)}><X className="h-4 w-4" /></Button>
+              <Button size="sm" variant="ghost" aria-label="ページ SEO 設定を閉じる" onClick={() => setPageSeoOpen(false)}><X className="h-4 w-4" /></Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
@@ -429,11 +441,17 @@ export function LandingEditor({
       </div>
 
       {addOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setAddOpen(false)}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-section-modal-title"
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+          onClick={() => setAddOpen(false)}
+        >
           <div className="bg-white dark:bg-gray-900 rounded-lg max-w-2xl w-full p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold">セクション追加</h2>
-              <button onClick={() => setAddOpen(false)}><X className="h-5 w-5" /></button>
+              <h2 id="add-section-modal-title" className="text-lg font-bold">セクション追加</h2>
+              <button aria-label="閉じる" onClick={() => setAddOpen(false)}><X className="h-5 w-5" /></button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {SECTION_TYPES.map((t) => (
@@ -452,11 +470,17 @@ export function LandingEditor({
       )}
 
       {historyOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setHistoryOpen(false)}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="history-modal-title"
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+          onClick={() => setHistoryOpen(false)}
+        >
           <div className="bg-white dark:bg-gray-900 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold">公開履歴</h2>
-              <button onClick={() => setHistoryOpen(false)}><X className="h-5 w-5" /></button>
+              <h2 id="history-modal-title" className="text-lg font-bold">公開履歴</h2>
+              <button aria-label="閉じる" onClick={() => setHistoryOpen(false)}><X className="h-5 w-5" /></button>
             </div>
             {history.length === 0 ? (
               <p className="text-gray-400">まだ公開履歴がありません</p>
@@ -643,13 +667,17 @@ function SortableSectionItem({
         </button>
       </div>
       <div className="flex gap-1 mt-2 ml-6">
-        <button onClick={onToggleVisible} title={section.is_visible ? "非表示にする" : "表示する"}>
+        <button
+          onClick={onToggleVisible}
+          aria-label={section.is_visible ? "セクションを非表示にする" : "セクションを表示する"}
+          title={section.is_visible ? "非表示にする" : "表示する"}
+        >
           {section.is_visible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3 text-gray-400" />}
         </button>
-        <button onClick={onDuplicate} title="複製" className="text-blue-500">
+        <button onClick={onDuplicate} aria-label="セクションを複製" title="複製" className="text-blue-500">
           <Copy className="h-3 w-3" />
         </button>
-        <button onClick={onDelete} className="text-red-500 ml-auto" title="削除">
+        <button onClick={onDelete} aria-label="セクションを削除" className="text-red-500 ml-auto" title="削除">
           <Trash2 className="h-3 w-3" />
         </button>
       </div>
